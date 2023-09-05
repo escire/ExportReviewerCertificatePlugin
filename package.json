@@ -11,5 +11,9 @@
 	},
 	"devDependencies": {
 		"np": "*"
+	},
+	"dependencies": {
+		"got": "11.8.3",
+		"node-fetch": "2.6.7"
 	}
 }
