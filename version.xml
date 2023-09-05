@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE version SYSTEM "./../../../lib/pkp/dtd/pluginVersion.dtd">
+<version>
+	<application>exportReviewerCertificate</application>
+	<type>plugins.generic</type>
+	<release>1.0.0</release>
+	<date>2023-08-23</date>
+	<lazy-load>1</lazy-load>
+	<class>ExportReviewerCertificatePlugin</class>
+</version>

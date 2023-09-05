@@ -1,0 +1,130 @@
+#  Display name language settings
+msgid "plugins.generic.exportReviewerCertificate.displayName"
+msgstr "Export reviewer certificate"
+#  Description language settings
+msgid "plugins.generic.exportReviewerCertificate.description"
+msgstr "This plugin allow reviewers export their certificates by reviewed items."
+#######################################################################################
+
+
+
+#  Tab language settings
+msgid "plugins.generic.exportReviewerCertificate.tabname"
+msgstr "Reviewer certificate"
+#######################################################################################
+
+
+
+#  Editorial language settings
+msgid "plugins.generic.exportReviewerCertificate.editorialSettings.label"
+msgstr "Editorial settings"
+
+msgid "plugins.generic.exportReviewerCertificate.editorialSettings.description"
+msgstr "In this section you can configure the publisher's data that will appear in the evaluation completion certificate of each article for each reviewer."
+
+msgid "plugins.generic.exportReviewerCertificate.settings.editorName"
+msgstr "Editor name"
+
+msgid "plugins.generic.exportReviewerCertificate.settings.editorSignature"
+msgstr "Editor signature (transparent background)"
+
+msgid "plugins.generic.exportReviewerCertificate.settings.editorSignature.description"
+msgstr "It is recommended to use transparent background png images with 500px width and 500px height."
+
+msgid "plugins.generic.exportReviewerCertificate.settings.editorialAddress"
+msgstr "Editorial address"
+
+msgid "plugins.generic.exportReviewerCertificate.settings.editorialPhone"
+msgstr "Editorial phone"
+#######################################################################################
+
+
+
+#  Journal certificate language settings
+msgid "plugins.generic.exportReviewerCertificate.journalCertificateSettings.label"
+msgstr "Certificate settings"
+
+msgid "plugins.generic.exportReviewerCertificate.journalCertificateSettings.description"
+msgstr "In this section you can configure the content data of the evaluation completion certificate of each article for each reviewer."
+
+msgid "plugins.generic.exportReviewerCertificate.settings.journalCertificateHeader"
+msgstr "Certificate header image"
+
+msgid "plugins.generic.exportReviewerCertificate.settings.journalCertificateHeader.description"
+msgstr "It´s recommended to use png or jpg images with 1600px width and 300px height."
+
+msgid "plugins.generic.exportReviewerCertificate.settings.certificateJournalInfo"
+msgstr "Journal info"
+#######################################################################################
+
+
+
+#  Institution language settings
+msgid "plugins.generic.exportReviewerCertificate.institutionSettings.label"
+msgstr "Institution settings"
+
+msgid "plugins.generic.exportReviewerCertificate.institutionSettings.description"
+msgstr "In this section you can configure the information of the institution that will appear in the certificate of completion of the evaluation of each article for each reviewer."
+
+msgid "plugins.generic.exportReviewerCertificate.settings.institutionName"
+msgstr "Institution name"
+
+msgid "plugins.generic.exportReviewerCertificate.settings.academicUnitName1"
+msgstr "Academic unit name 1"
+
+msgid "plugins.generic.exportReviewerCertificate.settings.academicUnitName2"
+msgstr "Academic unit name 2"
+
+msgid "plugins.generic.exportReviewerCertificate.settings.educationalProgramName"
+msgstr "Educational program name"
+#######################################################################################
+
+
+
+#   PDF Download button language settings
+msgid "plugins.generic.exportReviewerCertificate.button"
+msgstr "Generate certificate"
+
+msgid "plugins.generic.exportReviewerCertificate.button.title"
+msgstr "Download evaluation completion certificate from article"
+#######################################################################################
+
+
+
+#  Months language settings
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.january"
+msgstr "January"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.february"
+msgstr "February"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.march"
+msgstr "March"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.april"
+msgstr "April"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.may"
+msgstr "May"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.june"
+msgstr "June"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.july"
+msgstr "July"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.august"
+msgstr "August"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.september"
+msgstr "September"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.october"
+msgstr "October"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.november"
+msgstr "November"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.month.december"
+msgstr "December"
+#######################################################################################
