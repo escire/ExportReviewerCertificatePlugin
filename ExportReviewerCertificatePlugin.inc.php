@@ -20,11 +20,11 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
   {
     $success = parent::register($category, $path);
     if ($success && $this->getEnabled()) {
-      HookRegistry::register('Schema::get::context', array($this, 'addToSchema'));
-      HookRegistry::register('Template::Settings::website::setup', array($this, 'callbackAppearanceTab'));
-      HookRegistry::register('APIHandler::endpoints', array($this, 'callbackSetupEndpoints'));
+      HookRegistry::register('Schema::get::context', [$this, 'addToSchema']);
+      HookRegistry::register('Template::Settings::website::setup', [$this, 'callbackAppearanceTab']);
+      HookRegistry::register('APIHandler::endpoints', [$this, 'callbackSetupEndpoints']);
       HookRegistry::register('LoadHandler', [$this, 'setPageHandler']);
-      HookRegistry::register('TemplateResource::getFilename', array($this, '_overridePluginTemplates'));
+      HookRegistry::register('TemplateResource::getFilename', [$this, '_overridePluginTemplates']);
     }
     return $success;
   }
@@ -109,7 +109,7 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
    */
   public function isSitePlugin()
   {
-    return true;
+    return false;
   }
 
   public function setPageHandler($hookName, $params)
