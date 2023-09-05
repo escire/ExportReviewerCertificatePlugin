@@ -1,21 +1,25 @@
-#  Display name language settings
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-11-19T11:05:02+00:00\n"
+"PO-Revision-Date: 2019-11-19T11:05:02+00:00\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
 msgid "plugins.generic.exportReviewerCertificate.displayName"
 msgstr "Exportar certificado del evaluador"
-#  Description language settings
+
 msgid "plugins.generic.exportReviewerCertificate.description"
 msgstr "Este plugin permite a los evaluadores descargar sus certificados por revisión realizada."
-#######################################################################################
 
-
-
-#  Tab language settings
 msgid "plugins.generic.exportReviewerCertificate.tabname"
 msgstr "Certificado revisor"
-#######################################################################################
 
-
-
-#  Editorial language settings
 msgid "plugins.generic.exportReviewerCertificate.editorialSettings.label"
 msgstr "Configuraciones de la editorial"
 
@@ -36,10 +40,7 @@ msgstr "Domicilio de la editorial"
 
 msgid "plugins.generic.exportReviewerCertificate.settings.editorialPhone"
 msgstr "Teléfono de la editorial"
-#######################################################################################
 
-
-#  Journal certificate language settings
 msgid "plugins.generic.exportReviewerCertificate.journalCertificateSettings.label"
 msgstr "Configuraciones del certificado"
 
@@ -54,11 +55,7 @@ msgstr "Se recomienda utilizar imágenes png o jpg con 1600px de ancho y 300px d
 
 msgid "plugins.generic.exportReviewerCertificate.settings.certificateJournalInfo"
 msgstr "Información de la revista"
-#######################################################################################
 
-
-
-#  Institution language settings
 msgid "plugins.generic.exportReviewerCertificate.institutionSettings.label"
 msgstr "Configuraciones de la institución"
 
@@ -76,21 +73,13 @@ msgstr "Nombre de la unidad académica 2"
 
 msgid "plugins.generic.exportReviewerCertificate.settings.educationalProgramName"
 msgstr "Nombre del programa educativo"
-#######################################################################################
 
-
-
-#   PDF Download button language settings
 msgid "plugins.generic.exportReviewerCertificate.button"
 msgstr "Generar certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.button.title"
 msgstr "Descargar certificado de finalización de revisión del artículo"
-#######################################################################################
 
-
-
-#  Months language settings
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.january"
 msgstr "Enero"
 
@@ -126,4 +115,3 @@ msgstr "Noviembre"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.december"
 msgstr "Diciembre"
-#######################################################################################
