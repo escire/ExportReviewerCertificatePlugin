@@ -1,6 +1,7 @@
 {
 	"name": "export-reviewer-certificate",
 	"version": "1.0.0",
+	"type": "module",
 	"engines": {
 		"npm": ">9.0.0",
 		"node": ">=16.0.0"
