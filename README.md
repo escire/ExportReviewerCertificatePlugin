@@ -57,3 +57,4 @@ php lib/pkp/tools/installPluginVersion.php plugins/generic/exportReviewerCertifi
 
 ## Licence
 
+GNU GPL v3
