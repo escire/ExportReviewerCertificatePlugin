@@ -40,10 +40,8 @@ git clone --branch ojs33_export_reviewer_certificate_plugin --single-branch http
 3. Open Plugin modules tab and import tar.gz plugin
 4. That´s all, now you can enable and configure the plugin to each journal
 
-## Settings
-
-
-## Usage
+## Settings and usage
+You can found a basic manual slides clicking this [link](https://docs.google.com/presentation/d/1JYImDqrfUTHMzBFLoflQOABSx70c8nt4nFZBR9lBKzI/edit?usp=sharing)
 
 
 ## Possible problems
