@@ -80,6 +80,15 @@ msgstr "Generar certificado"
 msgid "plugins.generic.exportReviewerCertificate.button.title"
 msgstr "Descargar certificado de finalización de revisión del artículo"
 
+msgid "plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.male"
+msgstr "el"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.female"
+msgstr "la"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.independent_reviewer"
+msgstr "investigador independiente"
+
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.january"
 msgstr "Enero"
 
