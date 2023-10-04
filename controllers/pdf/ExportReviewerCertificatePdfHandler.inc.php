@@ -63,23 +63,18 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		$this->_request = $request;
 		$params = $request->_requestVars;
 
-		$this->certificate_dataset["certificate_watermark"] = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Logo_de_la_UPTC.svg/1200px-Logo_de_la_UPTC.svg.png";
-		$this->certificate_dataset["certificate_greeting"] = "<p>To whom it may concern:</p>";
+		// $this->certificate_dataset["certificate_watermark"] = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Logo_de_la_UPTC.svg/1200px-Logo_de_la_UPTC.svg.png";
 
-		$this->certificate_dataset["certificate_content"] = "<p>It is certified that {{reviewer_gender}} {{reviewer_title}} <strong>{{reviewer_fullname}}</strong>{{reviewer_institution}}, evaluated the manuscript titled “<strong>{{publication_title}}</strong>” where a review of compliance with the parameters of the manuscript was carried out, and the information contained in the manuscript and its originality were verified.</p>";
-		$this->certificate_dataset["institution_description"] = "<p>The Science in Development Magazine is a magazine edited by the Research and Extension Center of the Faculty of Sciences (CIEC) of the Pedagogical and Technological University of Colombia UPTC, which seeks to contribute to the dissemination of new scientific knowledge and technological developments that are produced in the field of basic sciences (biology, physics, mathematics and chemistry) and is an open space that allows researchers and those interested in the subject direct access to the contents in a free way for the entire public, in such a way that it will allow a constant intersection of its publications worldwide in scientific knowledge, publishing in Spanish, English or Portuguese and is currently indexed in Publindex B (Colciencias-Colombia).</p>";
-		$this->certificate_dataset["certificate_date"] = "<p>The issuance of this certificate is made at the request of the interested party on the {{day_number}} day of the month of {{month_name}} of {{year_number}}.</p>";
-		$this->certificate_dataset["certificate_goodbye"] = "<p>Cordially, </p>";
 
-		if($params["reviewer_gender"] == "male"){
+		if ($params["reviewer_gender"] == "male") {
 			$this->certificate_dataset["reviewer_gender"] = __("plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.male");
 		}
-		if($params["reviewer_gender"] == "female"){
+		if ($params["reviewer_gender"] == "female") {
 			$this->certificate_dataset["reviewer_gender"] = __("plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.female");
 		}
 		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "c.";
 		$this->certificate_dataset["reviewer_institution"] = isset($params['submission']) ? $params['reviewer_institution'] : __('plugins.generic.exportReviewerCertificate.pdf.independent_reviewer');
-		
+
 		$this->reviewer();
 		$this->journal();
 		$this->submission($params['submission']);
@@ -97,7 +92,6 @@ class ExportReviewerCertificatePdfHandler extends Handler
 				$locale = $this->locale;
 				$reviewer = json_decode(json_encode($reviewer->_data, JSON_UNESCAPED_UNICODE));
 				$this->certificate_dataset['reviewer_fullname'] = $reviewer->givenName->$locale . ' ' . $reviewer->familyName->$locale;
-				// $this->certificate_dataset['reviewer_institution'] = $reviewer->affiliation->$locale;
 			}
 		}
 	}
@@ -112,17 +106,22 @@ class ExportReviewerCertificatePdfHandler extends Handler
 				$locale = $this->locale;
 				$journal = json_decode(json_encode($journal->_data, JSON_UNESCAPED_UNICODE));
 				$protocol = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https://' : 'http://');
-				$urlPath = $protocol . $_SERVER['HTTP_HOST'] . $this->_request->getBasePath() . "/index.php/" . $journal->urlPath;
+				// $urlPath = $protocol . $_SERVER['HTTP_HOST'] . $this->_request->getBasePath() . "/index.php/" . $journal->urlPath;
 				$basePath = $protocol . $_SERVER['HTTP_HOST'] . $this->_request->getBasePath() . "/public/journals/" . $journal->id . "/";
 
-				$this->certificate_dataset['certificate_header'] = $basePath . (json_decode($journal->journalCertificateHeader)->uploadName);
+				$this->certificate_dataset['certificate_watermark'] = $basePath . (json_decode($journal->certificateWatermark)->uploadName);
+				$this->certificate_dataset['certificate_header'] = $basePath . (json_decode($journal->certificateHeader)->uploadName);
 
-				$this->certificate_dataset['certificate_editor_sign'] = $basePath . (json_decode($journal->editorSignature)->uploadName);
-				$this->certificate_dataset['certificate_editor_name'] = $journal->editorName;
-				$this->certificate_dataset['certificate_editor_institution'] = $journal->institutionName ? $journal->institutionName : "";
-				$this->certificate_dataset['certificate_editor_email'] = $journal->contactEmail;
+				$this->certificate_dataset["certificate_greeting"] = $journal->certificateGretting->$locale;
+				$this->certificate_dataset["certificate_content"] = $journal->certificateContent->$locale;
+				$this->certificate_dataset["institution_description"] = $journal->certificateInstitutionDescription->$locale ?? NULL;
+				$this->certificate_dataset["certificate_date"] = $journal->certificateDate->$locale;
+				$this->certificate_dataset["certificate_goodbye"] = $journal->certificateGoodbye->$locale;
 
-				// $this->certificate_dataset->journal_url = $urlPath;
+				$this->certificate_dataset['certificate_editor_sign'] = $basePath . (json_decode($journal->certificateEditorSign)->uploadName);
+				$this->certificate_dataset['certificate_editor_name'] = $journal->certificateEditorName;
+				$this->certificate_dataset['certificate_editor_institution'] = $journal->institutionName ?? NULL;
+				$this->certificate_dataset['certificate_editor_email'] = $journal->contactEmail ?? NULL;
 			}
 		}
 	}

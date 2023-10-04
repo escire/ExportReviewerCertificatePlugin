@@ -15,7 +15,7 @@
 
 namespace PKP\components\forms\context;
 
-
+use Application;
 use PKP\components\forms\FieldRichTextarea;
 use PKP\components\forms\FormComponent;
 use PKP\components\forms\FieldText;
@@ -44,26 +44,107 @@ class ExportReviewerCertificateForm extends FormComponent
 	{
 		$this->action = $action;
 		$this->locales = $locales;
+		$locale = json_decode(json_encode(Application::get()->getRequest()->getContext()->_data))->primaryLocale;
+		dd($locale);
 
-		// Editor group
+		// Certificate design settings
 		$this
 			->addGroup([
-				"id" => "editorialsettings",
-				"label" => __("plugins.generic.exportReviewerCertificate.editorialSettings.label"),
-				"description" => __("plugins.generic.exportReviewerCertificate.editorialSettings.description")
+				"id" => "designDocumentSettings",
+				"label" => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.label"),
+				"description" => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.label")
 			])
-			->addField(new FieldText('editorName', [
-				'groupId' => 'editorialsettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.settings.editorName'),
-				'size' => 'large',
+			->addField(new FieldUploadImage('certificateWatermark', [
+				'groupId' => 'designDocumentSettings',
+				'label' => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.watermark.label"),
+				"description" => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.watermark.description"),
+				'value' => json_decode($context->getData('certificateWatermark')),
+				'isMultilingual' => false,
+				'isRequired' => false,
+				'baseUrl' => $baseUrl,
+				'options' => [
+					'url' => $temporaryFileApiUrl
+				]
+			]))
+			->addField(new FieldUploadImage('certificateHeader', [
+				'groupId' => 'designDocumentSettings',
+				'label' => __('plugins.generic.exportReviewerCertificate.designDocumentSettings.header.label'),
+				"description" => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.header.description"),
+				'value' => json_decode($context->getData('certificateHeader')),
+				'isMultilingual' => false,
+				'isRequired' => false,
+				'baseUrl' => $baseUrl,
+				'options' => [
+					'url' => $temporaryFileApiUrl
+				]
+			]));
+		// Certificate content settings
+		$this
+			->addGroup([
+				"id" => "contentDocumentSettings",
+				"label" => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.label"),
+				"description" => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.description")
+			])
+			->addField(new FieldRichTextarea('certificateGretting', [
+				'groupId' => 'contentDocumentSettings',
+				'label' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGretting.label"),
+				"description" => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGretting.description"),
+				'size' => 'short',
 				'isRequired' => true,
 				'isMultilingual' => false,
-				'value' => $context->getData('editorName')
-			]))->addField(new FieldUploadImage('editorSignature', [
-				'groupId' => 'editorialsettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.settings.editorSignature'),
-				"description" => __("plugins.generic.exportReviewerCertificate.settings.editorSignature.description"),
-				'value' => json_decode($context->getData('editorSignature')),
+				'value' => $context->getData('certificateGretting')
+			]))
+			->addField(new FieldRichTextarea('certificateContent', [
+				'groupId' => 'contentDocumentSettings',
+				'label' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateContent.label"),
+				"description" => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateContent.description"),
+				"tooltip" => "Lorem ipsum dolor {{reviewer_gender}} {{reviewer_title}} amet {{reviewer_fullname}}{{reviewer_institution}}, consectetur adipiscing elit. Pellentesque ut magna quis {{publication_title}} faucibus pulvinar. In hac habitasse platea dictumst. Mauris commodo placerat urna, a iaculis sapien laoreet eget. Nunc bibendum quis sem a ullamcorper. In nec interdum justo. Sed fringilla volutpat ante vel malesuada. Curabitur erat ipsum, condimentum vel.",
+				'size' => 'small',
+				'isRequired' => true,
+				'isMultilingual' => false,
+				'value' => $context->getData('certificateContent')
+			]))
+			->addField(new FieldRichTextarea('certificateInstitutionDescription', [
+				'groupId' => 'contentDocumentSettings',
+				'label' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.label"),
+				'description' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.description"),
+				'size' => 'large',
+				'isRequired' => false,
+				'isMultilingual' => false,
+				'value' => $context->getData('certificateInstitutionDescription')
+			]))
+			->addField(new FieldRichTextarea('certificateDate', [
+				'groupId' => 'contentDocumentSettings',
+				'label' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateDate.label"),
+				'description' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateDate.description"),
+				"tooltip" => "Lorem ipsum dolor {{day_number}} amet {{month_name}} yet {{year_number}}.",
+				'size' => 'short',
+				'isRequired' => true,
+				'isMultilingual' => false,
+				'value' => $context->getData('certificateDate')
+			]))
+			->addField(new FieldRichTextarea('certificateGoodbye', [
+				'groupId' => 'contentDocumentSettings',
+				'label' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGoodbye.label"),
+				'description' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGoodbye.description"),
+				'size' => 'short',
+				'isRequired' => true,
+				'isMultilingual' => false,
+				'value' => $context->getData('certificateGoodbye')
+			]));
+
+		// Certificate signature settings
+		$this
+			->addGroup([
+				"id" => "certificateSignatureSettings",
+				"label" => __("plugins.generic.exportReviewerCertificate.certificateSignatureSettings.label"),
+				"description" => __("plugins.generic.exportReviewerCertificate.certificateSignatureSettings.description")
+			])
+			->addField(new FieldUploadImage('certificateEditorSign', [
+				'groupId' => 'certificateSignatureSettings',
+				'label' => __('plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSign.label'),
+				"description" => __("plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSign.description"),
+				'value' => json_decode($context->getData('certificateEditorSign')),
 				'isMultilingual' => false,
 				'isRequired' => true,
 				'baseUrl' => $baseUrl,
@@ -71,79 +152,29 @@ class ExportReviewerCertificateForm extends FormComponent
 					'url' => $temporaryFileApiUrl
 				]
 			]))
-			->addField(new FieldText('editorialAddress', [
-				'groupId' => 'editorialsettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.settings.editorialAddress'),
+			->addField(new FieldText('certificateEditorName', [
+				'groupId' => 'certificateSignatureSettings',
+				'label' => __('plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorName.label'),
 				'size' => 'large',
 				'isRequired' => true,
 				'isMultilingual' => false,
-				'value' => $context->getData('editorialAddress')
-			]))->addField(new FieldText('editorialPhone', [
-				'groupId' => 'editorialsettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.settings.editorialPhone'),
-				'size' => 'large',
-				'isRequired' => false,
-				'isMultilingual' => false,
-				'value' => $context->getData('editorialPhone')
+				'value' => $context->getData('certificateEditorName')
 			]))
-			// Certificate settings
-			->addGroup([
-				"id" => "journalCertificateSettings",
-				"label" => __("plugins.generic.exportReviewerCertificate.journalCertificateSettings.label"),
-				"description" => __("plugins.generic.exportReviewerCertificate.journalCertificateSettings.description")
-			])->addField(new FieldUploadImage('journalCertificateHeader', [
-				'groupId' => 'journalCertificateSettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.settings.journalCertificateHeader'),
-				"description" => __("plugins.generic.exportReviewerCertificate.settings.journalCertificateHeader.description"),
-				'value' => json_decode($context->getData('journalCertificateHeader')),
-				'isMultilingual' => false,
-				'isRequired' => false,
-				'baseUrl' => $baseUrl,
-				'options' => [
-					'url' => $temporaryFileApiUrl
-				]
-			]))->addField(new FieldRichTextarea('certificateJournalInfo', [
-				'groupId' => 'journalCertificateSettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.settings.certificateJournalInfo'),
+			->addField(new FieldText('certificateEditorInstitution', [
+				'groupId' => 'certificateSignatureSettings',
+				'label' => __('plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorInstitution.label'),
 				'size' => 'large',
 				'isRequired' => false,
 				'isMultilingual' => false,
-				'value' => $context->getData('certificateJournalInfo')
+				'value' => $context->getData('certificateEditorInstitution')
 			]))
-			// Institution settings
-			->addGroup([
-				"id" => "institutionSettings",
-				"label" => __("plugins.generic.exportReviewerCertificate.institutionSettings.label"),
-				"description" => __("plugins.generic.exportReviewerCertificate.institutionSettings.description")
-			])
-			->addField(new FieldText('institutionName', [
-				'groupId' => 'institutionSettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.settings.institutionName'),
+			->addField(new FieldText('certificateEditorEmail', [
+				'groupId' => 'certificateSignatureSettings',
+				'label' => __('plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorEmail.label'),
 				'size' => 'large',
 				'isRequired' => false,
 				'isMultilingual' => false,
-				'value' => $context->getData('institutionName')
-			]))->addField(new FieldText('academicUnitName1', [
-				'groupId' => 'institutionSettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.settings.academicUnitName1'),
-				'size' => 'large',
-				'isRequired' => false,
-				'isMultilingual' => false,
-				'value' => $context->getData('academicUnitName1')
-			]))->addField(new FieldText('academicUnitName2', [
-				'groupId' => 'institutionSettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.settings.academicUnitName2'),
-				'size' => 'large',
-				'isRequired' => false,
-				'isMultilingual' => false,
-				'value' => $context->getData('academicUnitName2')
-			]))->addField(new FieldText('educationalProgramName', [
-				'groupId' => 'institutionSettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.settings.educationalProgramName'),
-				'size' => 'large',
-				'isRequired' => false,
-				'isMultilingual' => false,
-				'value' => $context->getData('educationalProgramName')
+				'value' => $context->getData('certificateEditorEmail')
 			]));
 	}
 }

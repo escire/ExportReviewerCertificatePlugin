@@ -32,15 +32,18 @@ class ExportReviewerCertificateSettingsTabFormHandler extends SettingsHandler
 		$paramKeys = array_keys($this->args);
 
 		foreach ($paramKeys as $paramKey) {
-			if (!(in_array($paramKey, ['editorSignature', 'journalCertificateHeader']))) {
-				$this->context->setData($paramKey, $this->args[$paramKey]);
+			if (!(in_array($paramKey, ['certificateWatermark', 'certificateHeader','certificateEditorSign']))) {
+				$this->context->setData($paramKey, $this->args[$paramKey],);
 			}
-			if (in_array($paramKey, ['editorSignature', 'journalCertificateHeader'])) {
-				if ($paramKey == "editorSignature") {
-					$keyName = "editor_signature_";
+			if (in_array($paramKey, ['certificateWatermark', 'certificateHeader','certificateEditorSign'])) {
+				if ($paramKey == "certificateWatermark") {
+					$keyName = "certificate_watermark_";
 				}
-				if ($paramKey == "journalCertificateHeader") {
-					$keyName = "journal_certificate_header_";
+				if ($paramKey == "certificateHeader") {
+					$keyName = "certificate_header_";
+				}
+				if ($paramKey == "certificateEditorSign") {
+					$keyName = "certificate_editor_sign_";
 				}
 				$this->context->setData($paramKey, $this->uploadImage($paramKey, $keyName));
 			}

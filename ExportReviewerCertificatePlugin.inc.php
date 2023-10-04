@@ -128,26 +128,8 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
   public function addToSchema($hookName, $args)
   {
     $schema = $args[0];
-    // Editorial settings
-    $schema->properties->editorialAddress = (object) [
-      'type' => 'string',
-      'multilingual' => false,
-      'apiSummary' => true,
-      'validation' => ['nullable']
-    ];
-    $schema->properties->editorialPhone = (object) [
-      'type' => 'string',
-      'multilingual' => false,
-      'apiSummary' => true,
-      'validation' => ['nullable']
-    ];
-    $schema->properties->editorName = (object) [
-      'type' => 'string',
-      'multilingual' => false,
-      'apiSummary' => true,
-      'validation' => ['nullable']
-    ];
-    $schema->properties->editorSignature = (object) [
+
+    $schema->properties->certificateWatermark = (object) [
       'type' => 'string',
       'apiSummary' => true,
       'multilingual' => false,
@@ -168,8 +150,7 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
       ]
     ];
 
-    // Journal inputs
-    $schema->properties->journalCertificateHeader = (object) [
+    $schema->properties->certificateHeader = (object) [
       'type' => 'string',
       'apiSummary' => true,
       'multilingual' => false,
@@ -189,39 +170,84 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
         ]
       ]
     ];
-    $schema->properties->certificateJournalInfo = (object) [
+
+    $schema->properties->certificateGretting = (object) [
       'type' => 'string',
       'multilingual' => false,
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
     
-    // Institution inputs
-    $schema->properties->institutionName = (object) [
-      'type' => 'string',
-      'multilingual' => false,
-      'apiSummary' => true,
-      'validation' => ['nullable']
-    ];
-    $schema->properties->academicUnitName1 = (object) [
-      'type' => 'string',
-      'multilingual' => false,
-      'apiSummary' => true,
-      'validation' => ['nullable']
-    ];
-    $schema->properties->academicUnitName2 = (object) [
-      'type' => 'string',
-      'multilingual' => false,
-      'apiSummary' => true,
-      'validation' => ['nullable']
-    ];
-    $schema->properties->educationalProgramName = (object) [
+    $schema->properties->certificateContent = (object) [
       'type' => 'string',
       'multilingual' => false,
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
 
+    $schema->properties->certificateInstitutionDescription = (object) [
+      'type' => 'string',
+      'multilingual' => false,
+      'apiSummary' => true,
+      'validation' => ['nullable']
+    ];
+
+    $schema->properties->certificateDate = (object) [
+      'type' => 'string',
+      'multilingual' => false,
+      'apiSummary' => true,
+      'validation' => ['nullable']
+    ];
+    
+    $schema->properties->certificateGoodbye = (object) [
+      'type' => 'string',
+      'multilingual' => false,
+      'apiSummary' => true,
+      'validation' => ['nullable']
+    ];
+
+    $schema->properties->certificateEditorSign = (object) [
+      'type' => 'string',
+      'apiSummary' => true,
+      'multilingual' => false,
+      'validation' => ['nullable'],
+      "properties" => [
+        "temporaryFileId" => [
+          "type" => "integer"
+        ],
+        "name" => [
+          "type" => "string"
+        ],
+        "uploadName" => [
+          "type" => "string"
+        ],
+        "altText" => [
+          "type" => "string"
+        ]
+      ]
+    ];
+
+    $schema->properties->certificateEditorName = (object) [
+      'type' => 'string',
+      'multilingual' => false,
+      'apiSummary' => true,
+      'validation' => ['nullable']
+    ];
+    
+    $schema->properties->certificateEditorInstitution = (object) [
+      'type' => 'string',
+      'multilingual' => false,
+      'apiSummary' => true,
+      'validation' => ['nullable']
+    ];
+
+    $schema->properties->certificateEditorEmail = (object) [
+      'type' => 'string',
+      'multilingual' => false,
+      'apiSummary' => true,
+      'validation' => ['nullable']
+    ];
+    
     return false;
   }
 }

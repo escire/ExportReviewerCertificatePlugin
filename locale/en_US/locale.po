@@ -17,72 +17,130 @@ msgstr "Export reviewer certificate"
 msgid "plugins.generic.exportReviewerCertificate.description"
 msgstr "This plugin allow reviewers export their certificates by reviewed items."
 
-
-
-
-
 msgid "plugins.generic.exportReviewerCertificate.tabname"
 msgstr "Reviewer certificate"
 
-msgid "plugins.generic.exportReviewerCertificate.editorialSettings.label"
-msgstr "Editorial settings"
 
-msgid "plugins.generic.exportReviewerCertificate.editorialSettings.description"
-msgstr "In this section you can configure the publisher's data that will appear in the evaluation completion certificate of each article for each reviewer."
 
-msgid "plugins.generic.exportReviewerCertificate.settings.editorName"
-msgstr "Editor name"
 
-msgid "plugins.generic.exportReviewerCertificate.settings.editorSignature"
-msgstr "Editor signature (transparent background)"
+msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.label"
+msgstr "Certificate layout settings"
 
-msgid "plugins.generic.exportReviewerCertificate.settings.editorSignature.description"
-msgstr "It is recommended to use transparent background png images with 500px width and 500px height."
+msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.description"
+msgstr "This section manages the details of the certificate design."
 
-msgid "plugins.generic.exportReviewerCertificate.settings.editorialAddress"
-msgstr "Editorial address"
+msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.watermark.label"
+msgstr "Certificate watermark"
 
-msgid "plugins.generic.exportReviewerCertificate.settings.editorialPhone"
-msgstr "Editorial phone"
+msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.watermark.description"
+msgstr "It´s recommended to use square PNG images with 1000px width and 1000px height and white or transparent background."
 
-msgid "plugins.generic.exportReviewerCertificate.journalCertificateSettings.label"
-msgstr "Certificate settings"
+msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.header.label"
+msgstr "Certificate header"
 
-msgid "plugins.generic.exportReviewerCertificate.journalCertificateSettings.description"
-msgstr "In this section you can configure the content data of the evaluation completion certificate of each article for each reviewer."
+msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.header.description"
+msgstr "It´s recommended to use PNG images with 600px width and 110px height and white or transparent background."
 
-msgid "plugins.generic.exportReviewerCertificate.settings.journalCertificateHeader"
-msgstr "Certificate header image"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.label"
+msgstr "Certificate content settings"
 
-msgid "plugins.generic.exportReviewerCertificate.settings.journalCertificateHeader.description"
-msgstr "It´s recommended to use png or jpg images with 1600px width and 300px height."
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.description"
+msgstr "This section manages the details of the certificate content."
 
-msgid "plugins.generic.exportReviewerCertificate.settings.certificateJournalInfo"
-msgstr "Journal info"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGretting.label"
+msgstr "Certificate greting"
 
-msgid "plugins.generic.exportReviewerCertificate.institutionSettings.label"
-msgstr "Institution settings"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGretting.description"
+msgstr "Enter the certificate greeting (Example, To Whom It May Concern:)"
 
-msgid "plugins.generic.exportReviewerCertificate.institutionSettings.description"
-msgstr "In this section you can configure the information of the institution that will appear in the certificate of completion of the evaluation of each article for each reviewer."
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateContent.label"
+msgstr "Certificate content"
 
-msgid "plugins.generic.exportReviewerCertificate.settings.institutionName"
-msgstr "Institution name"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateContent.description"
+msgstr "Enter the content of the certificate. In this field it is necessary to add special tags, which are listed below along with their description:<br><ul><li>{{reviewer_gender}}: Gender of the reviewer</li><li>{{reviewer_title }}: Title of the reviewer</li><li>{{reviewer_fullname}}: Full name of the reviewer</li><li>{{reviewer_institution}}: Institution to which the reviewer belongs</li><li> {{publication_title}}: Title of the publication you reviewed </li></ul>By clicking the button avobe <span class=\"fa fa-question-circle\"></span> you will see an example of how to write this section."
 
-msgid "plugins.generic.exportReviewerCertificate.settings.academicUnitName1"
-msgstr "Academic unit name 1"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.label"
+msgstr "Certificate journal information"
 
-msgid "plugins.generic.exportReviewerCertificate.settings.academicUnitName2"
-msgstr "Academic unit name 2"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.description"
+msgstr "Enter the journal information that issues the certificate. You can include what you consider necessary."
 
-msgid "plugins.generic.exportReviewerCertificate.settings.educationalProgramName"
-msgstr "Educational program name"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateDate.label"
+msgstr "Certificate issue date"
 
-msgid "plugins.generic.exportReviewerCertificate.button"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateDate.description"
+msgstr "Enter the content of the certificate issuance date. In this field it is necessary to add special tags, which are listed below along with their description:<br><ul><li>{{day_number}}: Expedition day</li><li>{{ month_name}}: Month of the expedition</li><li>{{year_number}}: Year of the expedition</li></ul>By clicking the button <span class=\"fa fa-question-circle\"></span> above you can see an example of how to write this section."
+
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGoodbye.label"
+msgstr "Certificate goodbye"
+
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGoodbye.description"
+msgstr "Enter the content of the certificate goodbye. (Example, Sincerely,)."
+
+msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.label"
+msgstr "Certificate signing settings"
+
+msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.description"
+msgstr "This section manages the certificate signing details."
+
+msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSign.label"
+msgstr "Editor's signature (transparent background)"
+
+msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSign.description"
+msgstr "It's recommended to use square png images with a transparent background with 500px width and 500px height."
+
+msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorName.label"
+msgstr "Editor's name"
+
+msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorInstitution.label"
+msgstr "Editor's institution"
+
+msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorEmail.label"
+msgstr "Editor's email"
+
+
+
+
+
+msgid "plugins.generic.exportReviewerCertificate.reviewer.instruction"
+msgstr "Before generating your certificate it is necessary to make some configurations. Please complete the following form to enable the <strong>Generate certificate</strong> button and continue downloading it."
+
+msgid "plugins.generic.exportReviewerCertificate.reviewer.selectOption"
+msgstr "Select a option"
+
+msgid "plugins.generic.exportReviewerCertificate.reviewer.maleOption"
+msgstr "Male"
+
+msgid "plugins.generic.exportReviewerCertificate.reviewer.femaleOption"
+msgstr "Female"
+
+msgid "plugins.generic.exportReviewerCertificate.reviewer.independentTypeOption"
+msgstr "Independent"
+
+msgid "plugins.generic.exportReviewerCertificate.reviewer.institutionTypeOption"
+msgstr "Institution"
+
+msgid "plugins.generic.exportReviewerCertificate.reviewer.genre_label"
+msgstr "Please choose the genre you want to activate:"
+
+msgid "plugins.generic.exportReviewerCertificate.reviewer.title_label"
+msgstr "Please enter the title you want to display:"
+
+msgid "plugins.generic.exportReviewerCertificate.reviewer.institution_type_label"
+msgstr "Please choose an institution type option:"
+
+msgid "plugins.generic.exportReviewerCertificate.reviewer.institution_label"
+msgstr "Please enter the name of your institution:"
+
+msgid "plugins.generic.exportReviewerCertificate.reviewer.button_label"
 msgstr "Generate certificate"
 
-msgid "plugins.generic.exportReviewerCertificate.button.title"
+msgid "plugins.generic.exportReviewerCertificate.reviewer.button_title"
 msgstr "Download evaluation completion certificate from article"
+
+
+
+
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.male"
 msgstr " "
@@ -93,38 +151,42 @@ msgstr " "
 msgid "plugins.generic.exportReviewerCertificate.pdf.independent_reviewer"
 msgstr "independent reviewer"
 
+
+
+
+
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.january"
-msgstr "January"
+msgstr "january"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.february"
-msgstr "February"
+msgstr "february"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.march"
-msgstr "March"
+msgstr "march"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.april"
-msgstr "April"
+msgstr "april"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.may"
-msgstr "May"
+msgstr "may"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.june"
-msgstr "June"
+msgstr "june"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.july"
-msgstr "July"
+msgstr "july"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.august"
-msgstr "August"
+msgstr "august"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.september"
-msgstr "September"
+msgstr "september"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.october"
-msgstr "October"
+msgstr "october"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.november"
-msgstr "November"
+msgstr "november"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.december"
-msgstr "December"
+msgstr "december"
