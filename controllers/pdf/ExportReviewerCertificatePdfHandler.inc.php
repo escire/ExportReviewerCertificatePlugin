@@ -140,7 +140,7 @@ class ExportReviewerCertificatePdfHandler extends Handler
 				$this->certificate_dataset["certificate_date"] = $journal->certificateDate->$locale;
 				$this->certificate_dataset["certificate_goodbye"] = $journal->certificateGoodbye->$locale;
 
-				$this->certificate_dataset['certificate_editor_sign'] = $basePath . (json_decode($journal->certificateEditorSign)->uploadName);
+				$this->certificate_dataset['certificate_editor_sign'] = $basePath . (json_decode($journal->certificateEditorSignature)->uploadName);
 				$this->certificate_dataset['certificate_editor_name'] = $journal->certificateEditorName;
 				$this->certificate_dataset['certificate_editor_institution'] = $journal->certificateEditorInstitution ?? NULL;
 				$this->certificate_dataset['certificate_editor_email'] = $journal->certificateEditorEmail ?? NULL;
