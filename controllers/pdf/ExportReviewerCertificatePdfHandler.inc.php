@@ -1,11 +1,28 @@
 <?php
+
+/**
+ * @file plugins/generic/exportReviewerCertificate/controllers/pdf/ExportReviewerCertificatePdfHandler.inc.php
+ *
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @class ExportReviewerCertificatePdfHandler
+ * @brief File implemeting the export reviewer certificate in PDF format handler.
+ * 
+ * @author epsomsegura
+ * @email segurajaramilloepsom@gmail.com
+ * @github https://github.com/epsomsegura
+ */
+
 import('classes.handler.Handler');
 
+/**
+ * @class ExportReviewerCertificatePdfHandler
+ * @brief Class implemeting the export reviewer certificate in PDF format handler.
+ */
 class ExportReviewerCertificatePdfHandler extends Handler
 {
 	private $_request;
 	private $locale;
-	private $html;
 	private $certificate_dataset;
 
 	public function __construct()
@@ -13,7 +30,7 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		// Allow just reviewer roles to download certificates
 		$this->addRoleAssignment([ROLE_ID_REVIEWER], ['reviewer', 'download']);
 		// Set global variables
-		$this->locale = json_decode(json_encode(Application::get()->getRequest()->getContext()->_data))->primaryLocale;
+		$this->locale = AppLocale::getLocale();
 		$this->certificate_dataset = [
 			"certificate_watermark" => NULL,
 			"certificate_header" => NULL,
@@ -57,15 +74,19 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	public function download($args, $request)
 	{
 		$currentUser = $request->getUser();
+		$this->_request = $request;
+		$params = $request->_requestVars;
+		// Validations
 		if (!$currentUser) {
 			return new JSONMessage("Error", "User is not logged in");
 		}
-		$this->_request = $request;
-		$params = $request->_requestVars;
-
-		// $this->certificate_dataset["certificate_watermark"] = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Logo_de_la_UPTC.svg/1200px-Logo_de_la_UPTC.svg.png";
-
-
+		if (!isset($params['submission'])) {
+			return new JSONMessage("Error", "Submission not setted");
+		}
+		if (!isset($params["reviewer_gender"])) {
+			return new JSONMessage("Error", "Reviewer gender not setted");
+		}
+		// Set certificate dataset from request params data
 		if ($params["reviewer_gender"] == "male") {
 			$this->certificate_dataset["reviewer_gender"] = __("plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.male");
 		}
@@ -73,19 +94,21 @@ class ExportReviewerCertificatePdfHandler extends Handler
 			$this->certificate_dataset["reviewer_gender"] = __("plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.female");
 		}
 		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "c.";
-		$this->certificate_dataset["reviewer_institution"] = isset($params['submission']) ? $params['reviewer_institution'] : __('plugins.generic.exportReviewerCertificate.pdf.independent_reviewer');
-
+		$this->certificate_dataset["reviewer_institution"] = (isset($params['reviewer_institution']) && $params['reviewer_institution'] != "" ? $params['reviewer_institution'] : __('plugins.generic.exportReviewerCertificate.pdf.independent_reviewer'));
+		// Set reviewer data into certificate dataset
 		$this->reviewer();
+		// Set journal data into certificate dataset
 		$this->journal();
+		// Set submission data into certificate dataset
 		$this->submission($params['submission']);
-
+		// 
 		return (new PDFLib($this->certificate_dataset))->stream();
 	}
 
 	/**
-	 *  Get reviewer data
+	 *  Get reviewer data and set into certificate dataset
 	 */
-	private function reviewer()
+	private function reviewer(): void
 	{
 		if (Application::get()->getRequest()->getUser()) {
 			if ($reviewer = Application::get()->getRequest()->getUser()) {
@@ -97,22 +120,21 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	}
 
 	/**
-	 * Get journal data
+	 * Get journal data and set into certificate dataset
 	 */
-	private function journal()
+	private function journal(): void
 	{
 		if (Application::get()->getRequest()->getUser()) {
 			if ($journal = Application::get()->getRequest()->getContext()) {
 				$locale = $this->locale;
 				$journal = json_decode(json_encode($journal->_data, JSON_UNESCAPED_UNICODE));
 				$protocol = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https://' : 'http://');
-				// $urlPath = $protocol . $_SERVER['HTTP_HOST'] . $this->_request->getBasePath() . "/index.php/" . $journal->urlPath;
 				$basePath = $protocol . $_SERVER['HTTP_HOST'] . $this->_request->getBasePath() . "/public/journals/" . $journal->id . "/";
 
 				$this->certificate_dataset['certificate_watermark'] = $basePath . (json_decode($journal->certificateWatermark)->uploadName);
 				$this->certificate_dataset['certificate_header'] = $basePath . (json_decode($journal->certificateHeader)->uploadName);
 
-				$this->certificate_dataset["certificate_greeting"] = $journal->certificateGretting->$locale;
+				$this->certificate_dataset["certificate_greeting"] = $journal->certificateGreeting->$locale;
 				$this->certificate_dataset["certificate_content"] = $journal->certificateContent->$locale;
 				$this->certificate_dataset["institution_description"] = $journal->certificateInstitutionDescription->$locale ?? NULL;
 				$this->certificate_dataset["certificate_date"] = $journal->certificateDate->$locale;
@@ -120,14 +142,14 @@ class ExportReviewerCertificatePdfHandler extends Handler
 
 				$this->certificate_dataset['certificate_editor_sign'] = $basePath . (json_decode($journal->certificateEditorSign)->uploadName);
 				$this->certificate_dataset['certificate_editor_name'] = $journal->certificateEditorName;
-				$this->certificate_dataset['certificate_editor_institution'] = $journal->institutionName ?? NULL;
-				$this->certificate_dataset['certificate_editor_email'] = $journal->contactEmail ?? NULL;
+				$this->certificate_dataset['certificate_editor_institution'] = $journal->certificateEditorInstitution ?? NULL;
+				$this->certificate_dataset['certificate_editor_email'] = $journal->certificateEditorEmail ?? NULL;
 			}
 		}
 	}
 
 	/**
-	 * Get submmission data
+	 * Get submmission data and set into certificate dataset
 	 */
 	private function submission($submissionId)
 	{

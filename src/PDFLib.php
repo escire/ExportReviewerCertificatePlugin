@@ -1,57 +1,76 @@
 <?php
 
+/**
+ * @file plugins/generic/exportReviewerCertificate/src/PDFLib.php
+ *
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @class PDFLib
+ * @brief File implemeting facade pdf generation file.
+ * 
+ * @author epsomsegura
+ * @email segurajaramilloepsom@gmail.com
+ * @github https://github.com/epsomsegura
+ */
+
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
+/**
+ * @class PDFLib
+ * @brief Class implemeting facade pdf generation file.
+ */
 class PDFLib
 {
     public $pdf;
     public $html;
     public $keywords;
 
+    /**
+     * Constructor
+     * @param $keywords array All needed keywords and content for design and export a certificate
+     */
     public function __construct($keywords)
     {
         $options = new Options();
         $options->set('isRemoteEnabled', TRUE);
         $this->keywords = $keywords;
-        // dd($this->keywords);
-        $this->createPDFHtml();
+        $this->createPDFHandler();
         $this->pdf = new Dompdf($options);
         $this->pdf->setPaper('A4', 'portrait');
     }
 
-    public function setHtmlString()
+    /**
+     * Set HTML String
+     */
+    public function setHtmlString(): self
     {
         $this->pdf->loadHtml($this->html);
         return $this;
     }
 
-    public function stream()
+    /**
+     * Stream pdf file
+     */
+    public function stream(): self
     {
         $this->setHtmlString();
         $this->pdf->render();
-        $this->pdf->stream('certificate.pdf', array('Attachment' => 0));
+        $this->pdf->stream($this->keywords['reviewer_fullname'].'-certificate.pdf', array('Attachment' => 0));
         return $this;
     }
 
-
-    public function replaceKeywords()
-    {
-        foreach ($this->keywords as $key => $value) {
-            if (isset($value)) {
-                $this->html = str_replace('${' . $key . '}', $value, $this->html);
-            }
-        }
-    }
-
-    private function createPDFHtml()
+    /**
+     * Create PDF Handler
+     */
+    private function createPDFHandler(): self
     {
         $pdfHtml = '<!DOCTYPE html>
-        <html lang="en">
+        <html>
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Certificado</title>
+            <title>'.$this->keywords['reviewer_fullname'].' certificate</title>
             <style>
                 /* General */
                 @page {

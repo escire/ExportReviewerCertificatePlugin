@@ -1,12 +1,13 @@
-{**
-* templates/reviewer/review/reviewCompleted.tpl
-*
-* Copyright (c) 2014-2021 Simon Fraser University
-* Copyright (c) 2003-2021 John Willinsky
-* Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
-*
-* Show the review completed page.
-*
+{* 
+    @file plugins/generic/exportReviewerCertificate/templates/reviewer/review/reviewCompleted.tpl
+
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    @brief File to overwrite the reviewerCompleted template to add new input elements to interact with step 4 reviewer review process.
+
+    @author epsomsegura
+    @email segurajaramilloepsom@gmail.com
+    @github https://github.com/epsomsegura
 *}
 
 <h2>{translate key="reviewer.complete"}</h2>

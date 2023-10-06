@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-19T11:05:02+00:00\n"
-"PO-Revision-Date: 2019-11-19T11:05:02+00:00\n"
+"POT-Creation-Date: 2023-10-01T00:00:00+00:00\n"
+"PO-Revision-Date: 2023-10-01T00:00:00+00:00\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: \n"
@@ -48,10 +48,10 @@ msgstr "Configuraciones del contenido del documento"
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.description"
 msgstr "En esta sección se administran los detalles del contenido del certificado."
 
-msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGretting.label"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGreeting.label"
 msgstr "Saludo del certificado"
 
-msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGretting.description"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGreeting.description"
 msgstr "Ingresa el saludo del certificado (Ejemplo, A quien corresponda:)"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateContent.label"
@@ -60,7 +60,7 @@ msgstr "Contenido del certificado"
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateContent.description"
 msgstr "Ingrese el contenido del certificado. En este campo es necesario que se agreguen etiquetas especiales, mismas que se listan a continuación junto con su descripción:<br><ul><li>{{reviewer_gender}}: Género del revisor</li><li>{{reviewer_title}}: Título del revisor</li><li>{{reviewer_fullname}}: Nombre completo del revisor</li><li>{{reviewer_institution}}: Institución a la que pertenece el revisor</li><li>{{publication_title}}: Título de la publicación que revisó</li></ul>Al hacer clic en el botón <span class='fas fa-circle-question'></span> de arriba podrás ver un ejemplo de como redactar esta sección."
 
-msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGretting.label"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.label"
 msgstr "Información de la revista que emite el certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.description"
@@ -69,7 +69,7 @@ msgstr "Ingrese la información de la revista que emite el certificado. Puede in
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.label"
 msgstr "Información de la revista"
 
-msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGretting.description"
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.description"
 msgstr "Ingrese la información de la revista que emite el certificado. Puede incluir lo que considere necesario."
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateDate.label"
@@ -90,10 +90,10 @@ msgstr "Configuración de firma del certificado"
 msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.description"
 msgstr "En esta sección se administran los detalles de la firma del certificado."
 
-msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSign.label"
+msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSignature.label"
 msgstr "Firma del editor (fondo transparente)"
 
-msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSign.description"
+msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSignature.description"
 msgstr "Se recomienda utilizar imágenes png cuadradas de fondo transparente con 500px de ancho y 500px de alto."
 
 msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorName.label"
@@ -139,7 +139,7 @@ msgstr "Por favor, elija una opción de tipo de institución:"
 msgid "plugins.generic.exportReviewerCertificate.reviewer.institution_label"
 msgstr "Por favor, ingrese el nombre de su institución:"
 
-msgid "plugins.generic.exportReviewerCertificate.button"
+msgid "plugins.generic.exportReviewerCertificate.reviewer.button_label"
 msgstr "Generar certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.button.title"

@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * @file plugins/generic/exportReviewerCertificate/ExportReviewerCertificatePlugin.inc.php
+ *
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @class ExportReviewerCertificatePlugin
+ * @brief Main class plugin
+ * 
+ * @author epsomsegura
+ * @email segurajaramilloepsom@gmail.com
+ * @github https://github.com/epsomsegura
+ */
 
 use PKP\components\forms\context\ExportReviewerCertificateForm;
 
@@ -8,6 +20,10 @@ import('lib.pkp.classes.file.FileManager');
 require_once(dirname(__FILE__) . '/vendor/autoload.php');
 require_once(dirname(__FILE__) . '/src/PDFLib.php');
 
+/**
+ * @class ExportReviewerCertificatePlugin
+ * @brief Main class plugin
+ */
 class ExportReviewerCertificatePlugin extends GenericPlugin
 {
   public $context;
@@ -171,42 +187,42 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
       ]
     ];
 
-    $schema->properties->certificateGretting = (object) [
+    $schema->properties->certificateGreeting = (object) [
       'type' => 'string',
-      'multilingual' => false,
+      'multilingual' => true,
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
     
     $schema->properties->certificateContent = (object) [
       'type' => 'string',
-      'multilingual' => false,
+      'multilingual' => true,
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
 
     $schema->properties->certificateInstitutionDescription = (object) [
       'type' => 'string',
-      'multilingual' => false,
+      'multilingual' => true,
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
 
     $schema->properties->certificateDate = (object) [
       'type' => 'string',
-      'multilingual' => false,
+      'multilingual' => true,
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
     
     $schema->properties->certificateGoodbye = (object) [
       'type' => 'string',
-      'multilingual' => false,
+      'multilingual' => true,
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
 
-    $schema->properties->certificateEditorSign = (object) [
+    $schema->properties->certificateEditorSignature = (object) [
       'type' => 'string',
       'apiSummary' => true,
       'multilingual' => false,

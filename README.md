@@ -5,11 +5,13 @@ This is a OJS 3.3 plugin that allows reviewers to download evaluation completion
 ## Table of content
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-    - [Clonning github repository](#clonning-github-repository)
+    - [Cloning from github repository](#cloning-from-github-repository)
     - [Using tar.gz file](#using-tar.gz-file)
 - [Settings](#settings)
-- [Usage](#usage)
-- [Notes](#notes)
+    - [Manual](#manual)
+    - [Languages](#languages)
+- [Possible problems](#possible-problems)
+- [Licence](#licence)
 
 ## Prerequisites
 
@@ -21,7 +23,7 @@ This is a OJS 3.3 plugin that allows reviewers to download evaluation completion
 
 ## Installation
 
-### Clonning github repository
+### Cloning from github repository
 If you have server access, you can clone this repo into <ojs_root_dir>/plugins/generic directory following this steps:
 
 1. Go to **/<ojs_root_dir>/plugins/generic** replacing **<ojs_root_dir>** with your project path
@@ -40,8 +42,13 @@ git clone --branch ojs33_export_reviewer_certificate_plugin --single-branch http
 3. Open Plugin modules tab and import tar.gz plugin
 4. That´s all, now you can enable and configure the plugin to each journal
 
-## Settings and usage
-You can found a basic manual slides clicking this [link](https://docs.google.com/presentation/d/1JYImDqrfUTHMzBFLoflQOABSx70c8nt4nFZBR9lBKzI/edit?usp=sharing)
+## Settings
+
+### Manual
+You can found a basic manual slides clicking this [link](https://docs.google.com/presentation/d/1JYImDqrfUTHMzBFLoflQOABSx70c8nt4nFZBR9lBKzI/edit?usp=sharing). This manual explains the journal certificate document configuration form, the reviewer personal details form and how to set each optional and required parameters including some special keywords used to assign specific data into exported certificate.
+
+### Languages
+This plugin version has English, Spanish, French and Portuguese languages but you can add new languages cloning any **country local code named folder** located into plugin directory /<ojs_root_dir>/plugins/generic/exportReviewerCertificate/locale, renaming folder name using **Country local code standard** and editing **locale.po** file content without deleting any code line. If you don't know the country local code you want to add you can search this on [saimana.com](https://saimana.com/list-of-country-locale-code/).
 
 
 ## Possible problems

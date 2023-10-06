@@ -1,21 +1,20 @@
 <?php
 
 /**
- * @file classes/components/form/context/PKPMastheadForm.inc.php
+ * @file plugins/generic/exportReviewerCertificate/classes/components/form/context/ExportReviewerCertificateForm.inc.php
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2000-2021 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class PKPMastheadForm
- * @ingroup classes_controllers_form
- *
- * @brief A preset form for configuring a context's masthead details.
+ * @class ExportReviewerCertificateForm
+ * @brief A preset form for configuring a context's export reviewer certificate.
+ * 
+ * @author epsomsegura
+ * @email segurajaramilloepsom@gmail.com
+ * @github https://github.com/epsomsegura
  */
 
 namespace PKP\components\forms\context;
 
-use Application;
 use PKP\components\forms\FieldRichTextarea;
 use PKP\components\forms\FormComponent;
 use PKP\components\forms\FieldText;
@@ -24,6 +23,10 @@ use PKP\components\forms\FieldUploadImage;
 
 define('FORM_EXPORT_REVIEWER_CERTIFICATE', 'exportReviewerCertificateSettings');
 
+/**
+ * @class ExportReviewerCertificateForm
+ * @brief Class implemeting a preset form for configuring a context's export reviewer certificate.
+ */
 class ExportReviewerCertificateForm extends FormComponent
 {
 	/** @copydoc FormComponent::$id */
@@ -38,16 +41,14 @@ class ExportReviewerCertificateForm extends FormComponent
 	 * @param $action string URL to submit the form to
 	 * @param $locales array Supported locales
 	 * @param $context Context Journal or Press to change settings for
-	 * @param $imageUploadUrl string The API endpoint for images uploaded through the rich text field
+	 * @param $baseUrl string The server endpoint for images uploaded through the image file field
+	 * @param $temporaryFileApiUrl string The API endpoint for images uploaded through the rich text field
 	 */
 	public function __construct($action, $locales, $context, $baseUrl, $temporaryFileApiUrl)
 	{
 		$this->action = $action;
 		$this->locales = $locales;
-		$locale = json_decode(json_encode(Application::get()->getRequest()->getContext()->_data))->primaryLocale;
-		dd($locale);
-
-		// Certificate design settings
+		// Certificate design settings group
 		$this
 			->addGroup([
 				"id" => "designDocumentSettings",
@@ -78,21 +79,20 @@ class ExportReviewerCertificateForm extends FormComponent
 					'url' => $temporaryFileApiUrl
 				]
 			]));
-		// Certificate content settings
+		// Certificate content settings group
 		$this
 			->addGroup([
 				"id" => "contentDocumentSettings",
 				"label" => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.label"),
 				"description" => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.description")
 			])
-			->addField(new FieldRichTextarea('certificateGretting', [
+			->addField(new FieldRichTextarea('certificateGreeting', [
 				'groupId' => 'contentDocumentSettings',
-				'label' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGretting.label"),
-				"description" => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGretting.description"),
+				'label' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGreeting.label"),
+				"description" => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGreeting.description"),
 				'size' => 'short',
-				'isRequired' => true,
-				'isMultilingual' => false,
-				'value' => $context->getData('certificateGretting')
+				'isMultilingual' => true,
+				'value' => $context->getData('certificateGreeting')
 			]))
 			->addField(new FieldRichTextarea('certificateContent', [
 				'groupId' => 'contentDocumentSettings',
@@ -101,7 +101,7 @@ class ExportReviewerCertificateForm extends FormComponent
 				"tooltip" => "Lorem ipsum dolor {{reviewer_gender}} {{reviewer_title}} amet {{reviewer_fullname}}{{reviewer_institution}}, consectetur adipiscing elit. Pellentesque ut magna quis {{publication_title}} faucibus pulvinar. In hac habitasse platea dictumst. Mauris commodo placerat urna, a iaculis sapien laoreet eget. Nunc bibendum quis sem a ullamcorper. In nec interdum justo. Sed fringilla volutpat ante vel malesuada. Curabitur erat ipsum, condimentum vel.",
 				'size' => 'small',
 				'isRequired' => true,
-				'isMultilingual' => false,
+				'isMultilingual' => true,
 				'value' => $context->getData('certificateContent')
 			]))
 			->addField(new FieldRichTextarea('certificateInstitutionDescription', [
@@ -109,8 +109,7 @@ class ExportReviewerCertificateForm extends FormComponent
 				'label' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.label"),
 				'description' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.description"),
 				'size' => 'large',
-				'isRequired' => false,
-				'isMultilingual' => false,
+				'isMultilingual' => true,
 				'value' => $context->getData('certificateInstitutionDescription')
 			]))
 			->addField(new FieldRichTextarea('certificateDate', [
@@ -120,7 +119,7 @@ class ExportReviewerCertificateForm extends FormComponent
 				"tooltip" => "Lorem ipsum dolor {{day_number}} amet {{month_name}} yet {{year_number}}.",
 				'size' => 'short',
 				'isRequired' => true,
-				'isMultilingual' => false,
+				'isMultilingual' => true,
 				'value' => $context->getData('certificateDate')
 			]))
 			->addField(new FieldRichTextarea('certificateGoodbye', [
@@ -129,22 +128,22 @@ class ExportReviewerCertificateForm extends FormComponent
 				'description' => __("plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGoodbye.description"),
 				'size' => 'short',
 				'isRequired' => true,
-				'isMultilingual' => false,
+				'isMultilingual' => true,
 				'value' => $context->getData('certificateGoodbye')
 			]));
 
-		// Certificate signature settings
+		// Certificate signature settings group
 		$this
 			->addGroup([
 				"id" => "certificateSignatureSettings",
 				"label" => __("plugins.generic.exportReviewerCertificate.certificateSignatureSettings.label"),
 				"description" => __("plugins.generic.exportReviewerCertificate.certificateSignatureSettings.description")
 			])
-			->addField(new FieldUploadImage('certificateEditorSign', [
+			->addField(new FieldUploadImage('certificateEditorSignature', [
 				'groupId' => 'certificateSignatureSettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSign.label'),
-				"description" => __("plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSign.description"),
-				'value' => json_decode($context->getData('certificateEditorSign')),
+				'label' => __('plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSignature.label'),
+				"description" => __("plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSignature.description"),
+				'value' => json_decode($context->getData('certificateEditorSignature')),
 				'isMultilingual' => false,
 				'isRequired' => true,
 				'baseUrl' => $baseUrl,
