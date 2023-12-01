@@ -65,6 +65,8 @@ op="fetchGrid" submissionId=$submission->getId() stageId=$reviewAssignment->getS
 
     #institution_container{
         display: none;
+        line-height: 1.1;
+        text-align: justify;
     }
 </style>
 
