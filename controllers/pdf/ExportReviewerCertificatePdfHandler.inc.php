@@ -101,6 +101,7 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		$this->journal();
 		// Set submission data into certificate dataset
 		$this->submission($params['submission']);
+		// dd($this->certificate_dataset);
 		// 
 		return (new PDFLib($this->certificate_dataset))->stream();
 	}

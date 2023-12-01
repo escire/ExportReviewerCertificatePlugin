@@ -164,6 +164,7 @@ class PDFLib
 
         if (array_key_exists('day_number', $this->keywords) && isset($this->keywords['day_number'])) {
             $pdfHtml = str_replace("{{day_number}}",$this->keywords['day_number'],$pdfHtml);
+            $pdfHtml = str_replace("{{day_text}}",$this->getDayNumber($this->keywords['day_number']),$pdfHtml);
         }
         if (array_key_exists('month_name', $this->keywords) && isset($this->keywords['month_name'])) {
             $pdfHtml = str_replace("{{month_name}}",strtolower($this->keywords['month_name']),$pdfHtml);
@@ -174,5 +175,44 @@ class PDFLib
         
         $this->html = $pdfHtml;
         return $this;
+    }
+
+    private function getDayNumber(string $dayNumber) : string
+    {
+        $key = $dayNumber < 10 ? "0".$dayNumber : $dayNumber;
+        $dayTextArray=[
+            "01"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text01'),
+            "02"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text02'),
+            "03"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text03'),
+            "04"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text04'),
+            "05"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text05'),
+            "06"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text06'),
+            "07"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text07'),
+            "08"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text08'),
+            "09"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text09'),
+            "10"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text10'),
+            "11"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text11'),
+            "12"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text12'),
+            "13"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text13'),
+            "14"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text14'),
+            "15"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text15'),
+            "16"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text16'),
+            "17"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text17'),
+            "18"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text18'),
+            "19"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text19'),
+            "20"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text20'),
+            "21"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text21'),
+            "22"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text22'),
+            "23"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text23'),
+            "24"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text24'),
+            "25"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text25'),
+            "26"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text26'),
+            "27"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text27'),
+            "28"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text28'),
+            "29"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text29'),
+            "30"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text30'),
+            "31"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text31'),
+        ];
+        return $dayTextArray[$key];
     }
 }
