@@ -69,7 +69,7 @@ msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certifi
 msgstr "Data de emissão do certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateDate.description"
-msgstr "Insira o conteúdo da data de emissão do certificado. Neste campo é necessário adicionar tags especiais, que estão listadas abaixo junto com sua descrição:<br><ul><li>{{day_number}}: Dia da expedição em formato numérico</ li><li>{{day_text}}: Dia da expedição em formato de texto</ li><li>{{month_name}}: Mês da expedição</li><li>{{year_number}}: Ano da expedição</li></ul>Clicando no botão <span class=\" fa fa-question-circle\"></span> acima você pode ver um exemplo de como escrever esta seção."
+msgstr "Insira o conteúdo da data de emissão do certificado. Neste campo é necessário adicionar tags especiais, que estão listadas abaixo junto com sua descrição:<br> <ul> <li>{{day_number}}: Dia da expedição em formato numérico</ li> <li>{{day_text}}: Dia da expedição em formato de texto</ li> <li>{{month_name}}: Mês da expedição</li> <li>{{year_number}}: Ano da expedição</li> <li>{{today_day_number}}: Hoje dia da expedição em formato numérico</li> <li>{{today_day_text}}: Hoje dia da expedição em formato de texto</li> <li>{{today_month_name}}: Hoje, mês da expedição</li> <li>{{today_year_number}}: Hoje, ano da expedição</li> </ul>Clicando no botão <span class=\" fa fa-question-circle\"></span> acima você pode ver um exemplo de como escrever esta seção."
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGoodbye.label"
 msgstr "Certificado de adeus"
