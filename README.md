@@ -70,5 +70,3 @@ php lib/pkp/tools/installPluginVersion.php plugins/generic/exportReviewerCertifi
 - Developer: Epsom Segura [🌐 LinkedIn](https://www.linkedin.com/in/epsomsegura/)
 - Email: [📧 epsom@escire.lat](mailto:epsom@escire.lat)
 - Institution: eScire [🌐 Website](https://www.escire.es/)
-
-
