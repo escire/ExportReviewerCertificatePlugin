@@ -70,18 +70,23 @@ class ExportReviewerCertificateSettingsTabFormHandler extends SettingsHandler
 		$publicFileManager = new PublicFileManager();
 		$fileProperties = ["name" => NULL, "uploadName" => NULL, "altText" => NULL];
 		// Check if context has value and params is null
+
 		if ($this->context->getData($paramKey) && !$this->args[$paramKey]) {
+		//if (isset($this->args[$paramKey]['temporaryFileId']) && !$this->args[$paramKey]['temporaryFileId'] && $this->context->getData($paramKey)) {
 			$fileProperties = json_decode($this->context->getData($paramKey), true);
 			$this->deleteExistingFile($fileProperties['uploadName']);
 			return "";
 		}
 		// Check if context has value and params has value and temporary file id is null
+		if(isset($this->args[$paramKey]['temporaryFileId'])){
 		if ($this->args[$paramKey] && !$this->args[$paramKey]['temporaryFileId'] && $this->context->getData($paramKey)) {
 			$fileProperties = json_decode($this->context->getData($paramKey), true);
 			$fileProperties['altText'] = $this->args[$paramKey]['altText'];
 		}
+		}
 		// Check if request has temporary file id
-		if ($this->args[$paramKey] && $this->args[$paramKey]['temporaryFileId']) {
+		//if ($this->args[$paramKey] && $this->args[$paramKey]['temporaryFileId']) {
+		if (isset($this->args[$paramKey]['temporaryFileId']) && $this->args[$paramKey]['temporaryFileId']) {
 			// Delete file if exists
 			if ($this->context->getData($paramKey)) {
 				$fileProperties = json_decode($this->context->getData($paramKey), true);
@@ -102,6 +107,8 @@ class ExportReviewerCertificateSettingsTabFormHandler extends SettingsHandler
 		return "{\"name\":\"" . $fileProperties['name'] . "\",\"uploadName\":\"" . $fileProperties['uploadName'] . "\",\"altText\":\"" . $fileProperties['altText'] . "\"}";
 	}
 
+
+
 	/**
 	 * Delete image
 	 * 
@@ -111,7 +118,15 @@ class ExportReviewerCertificateSettingsTabFormHandler extends SettingsHandler
 	{
 		import('classes.file.PublicFileManager');
 		$publicFileManager = new PublicFileManager();
-		$filePath = explode($this->request->getBasePath(), __DIR__)[0] . $this->request->getBasePath() . '/public/journals/' . $this->context->getId() . '/' . $fileName;
-		$publicFileManager->deleteByPath($filePath);
+//		error_log( print_r('*********Base Path**********', TRUE) );
+		$basePath = $this->request->getBasePath();
+		error_log( print_r($basePath, TRUE) );
+//		error_log( print_r('*********Get Path**********', TRUE) );
+                //error_log( print_r( __DIR__)[0] . $this->request->getBasePath() . '/public/journals/' . $this->context->getId() . '/' . $fileName, TRUE) );
+		if (!empty($this->context->getId()) && !empty($basePath)) {
+			$filePath = explode($this->request->getBasePath(), __DIR__)[0] . $this->request->getBasePath() . '/public/journals/' . $this->context->getId() . '/' . $fileName;
+			$publicFileManager->deleteByPath($filePath);
+		}
+		//$publicFileManager->deleteByPath($filePath);
 	}
-}
+ }

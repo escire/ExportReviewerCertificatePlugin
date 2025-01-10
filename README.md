@@ -12,6 +12,7 @@ This is a OJS 3.3 plugin that allows reviewers to download evaluation completion
     - [Languages](#languages)
 - [Possible problems](#possible-problems)
 - [Licence](#licence)
+- [Maintainers](#maintainers)
 
 ## Prerequisites
 
@@ -30,14 +31,14 @@ If you have server access, you can clone this repo into <ojs_root_dir>/plugins/g
 ```
 cd /<ojs_root_dir>/plugins/generic
 ```
-2. Clone this repo using **ojs33_export_reviewer_certificate_plugin** branch from plugin´s [github repository](https://github.com/epsomsegura/exportReviewerCertificate)
+2. Clone this repo using **ojs33_export_reviewer_certificate_plugin** branch from plugin´s [github repository](https://github.com/escire-ojs-plugins/exportReviewerCertificate/tree/ojs33_export_reviewer_certificate_plugin)
 ```
-git clone --branch ojs33_export_reviewer_certificate_plugin --single-branch https://github.com/epsomsegura/exportReviewerCertificate.git
+git clone --branch ojs33_export_reviewer_certificate_plugin --single-branch https://github.com/escire-ojs-plugins/exportReviewerCertificate/tree/ojs33_export_reviewer_certificate_plugin
 ```
 3. That´s all, now you can enable and configure the plugin to each journal
 
 ### Using tar.gz file
-1. Download OJS 3.3 plugin version using tar.gz compressed mode [🌐 Download link](https://github.com/epsomsegura/exportReviewerCertificate/archive/refs/tags/V1.1.0.tar.gz)
+1. Download OJS 3.3 plugin version using tar.gz compressed mode [🌐 Download link](https://github.com/escire-ojs-plugins/exportReviewerCertificate/releases/tag/V1.1.5)
 2. Login into OJS 3.3 and go to journal website settings.
 3. Open Plugin modules tab and import tar.gz plugin
 4. That´s all, now you can enable and configure the plugin to each journal
@@ -62,6 +63,10 @@ php lib/pkp/tools/installPluginVersion.php plugins/generic/exportReviewerCertifi
 
 ## Licence
 
-GNU GPL v3
+- GNU GPL v3
 
-Team eScire
+## Maintainers
+
+- Developer: Epsom Segura [🌐 LinkedIn](https://www.linkedin.com/in/epsomsegura/)
+- Email: [📧 epsom@escire.lat](mailto:epsom@escire.lat)
+- Institution: eScire [🌐 Website](https://www.escire.es/)

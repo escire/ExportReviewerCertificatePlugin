@@ -164,6 +164,10 @@ class ExportReviewerCertificatePdfHandler extends Handler
 					$this->certificate_dataset['day_number'] = date('d', strtotime($publication->lastModified));
 					$this->certificate_dataset['month_name'] =  $this->monthText($publication->lastModified);
 					$this->certificate_dataset['year_number'] = date('Y', strtotime($publication->lastModified));
+					$this->certificate_dataset['today_day_number'] = date('d');
+					$this->certificate_dataset['today_month_number'] = date('m');
+					$this->certificate_dataset['today_month_name'] =  $this->monthText(date('Y-m-d'));
+					$this->certificate_dataset['today_year_number'] = date('Y');
 				}
 			}
 		}
