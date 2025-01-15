@@ -8,9 +8,10 @@
  * @class ExportReviewerCertificatePdfHandler
  * @brief File implemeting the export reviewer certificate in PDF format handler.
  * 
- * @author epsomsegura
- * @email segurajaramilloepsom@gmail.com
- * @github https://github.com/epsomsegura
+ * @owner: eScire 
+ * @co_authors: eScire, Epsom Enrique Segura Jaramillo, Araceli Hernández Morales y Joel Torres Hernández
+ * @email: contacto@escire.lat
+ * @github: https://github.com/escire-ojs-plugins/exportReviewerCertificate
  */
 
 import('classes.handler.Handler');
