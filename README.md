@@ -65,8 +65,8 @@ php lib/pkp/tools/installPluginVersion.php plugins/generic/exportReviewerCertifi
 
 - GNU GPL v3
 
-## Maintainers
-
-- Developer: Epsom Segura [🌐 LinkedIn](https://www.linkedin.com/in/epsomsegura/)
-- Email: [📧 epsom@escire.lat](mailto:epsom@escire.lat)
-- Institution: eScire [🌐 Website](https://www.escire.es/)
+## Authors
+- [📧 eScire](mailto:contacto@escire.lat) - [🌐 Website](https://www.escire.lat/)
+- [📧 Araceli Hernández Morales](mailto:araceli@escire.lat)
+- [📧 Joel Torres Hernández](mailto:joel@escire.lat)
+- [📧 Epsom Segura](mailto:epsom@escire.lat)
