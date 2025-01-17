@@ -1,6 +1,6 @@
 {
 	"name": "export-reviewer-certificate",
-	"version": "1.0.1",
+	"version": "1.1.5.2",
 	"type": "module",
 	"engines": {
 		"npm": ">=8.0.0",
@@ -10,10 +10,12 @@
 		"release": "np"
 	},
 	"devDependencies": {
+		"cypress": "^13.17.0",
 		"np": "*"
 	},
 	"dependencies": {
-		"got": "11.8.3",
-		"node-fetch": "2.6.7"
+		"got": "^11.8.6",
+		"node-fetch": "2.6.7",
+		"save-dev": "^0.0.1-security"
 	}
 }

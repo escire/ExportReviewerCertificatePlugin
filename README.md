@@ -38,7 +38,7 @@ git clone --branch ojs33_export_reviewer_certificate_plugin --single-branch http
 3. That´s all, now you can enable and configure the plugin to each journal
 
 ### Using tar.gz file
-1. Download OJS 3.3 plugin version using tar.gz compressed mode [🌐 Download link](https://github.com/escire-ojs-plugins/exportReviewerCertificate/releases/tag/V1.1.5)
+1. Download OJS 3.3 plugin version using tar.gz compressed mode [🌐 Download link](https://github.com/escire-ojs-plugins/exportReviewerCertificate/releases/tag/V1.1.5.2)
 2. Login into OJS 3.3 and go to journal website settings.
 3. Open Plugin modules tab and import tar.gz plugin
 4. That´s all, now you can enable and configure the plugin to each journal
@@ -51,6 +51,43 @@ You can found a basic manual slides clicking this [link](https://docs.google.com
 ### Languages
 This plugin version has English, Spanish, French and Portuguese languages but you can add new languages cloning any **country local code named folder** located into plugin directory /<ojs_root_dir>/plugins/generic/exportReviewerCertificate/locale, renaming folder name using **Country local code standard** and editing **locale.po** file content without deleting any code line. If you don't know the country local code you want to add you can search this on [saimana.com](https://saimana.com/list-of-country-locale-code/).
 
+
+## Cypress tests
+First, you should to install some npm packages using this commands into OJS root project directory:
+
+````
+- npm install --save-dev cypress
+- npm install --save-dev cypress-file-upload
+````
+Then, configure the **cypress.config.js** file, this is an example:
+````
+const { defineConfig } = require('cypress');
+
+module.exports = defineConfig({
+    e2e: {
+        setupNodeEvents(on, config) {
+            // Agrega aquí el contenido de plugins/index.js
+            return config;
+        },
+        baseUrl: 'http://localhost/, // You can replace this URL with yours
+        specPattern: 'plugins/generic/exportReviewerCertificate/cypress/e2e/**/*.cy.{js,jsx,ts,tsx}', // Specs directory
+        supportFile: 'plugins/generic/exportReviewerCertificate/cypress/support/e2e.js', // Support file
+    },
+});
+````
+You can update the specPattern and directory properties with your project settings.
+
+Finally, execute this command to run tests in terminal:
+
+````
+- npx cypress run
+````
+
+If you want to run tests using graphic interface, run this command:
+````
+- npx cypress open
+````
+Follow the steps into main form and run.
 
 ## Possible problems
 
