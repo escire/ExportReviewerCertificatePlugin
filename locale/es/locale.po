@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "plugins.generic.exportReviewerCertificate.displayName"
+msgid "plugins.generic.exportReviewerCertificate.name"
 msgstr "Exportar certificado del evaluador"
 
 msgid "plugins.generic.exportReviewerCertificate.description"
@@ -34,7 +34,7 @@ msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.watermar
 msgstr "Marca de agua del certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.watermark.description"
-msgstr "Se recomienda utilizar imágenes cuadradas de dimensiones 1000px x 100px en formato PNG con fondo blanco o transparente."
+msgstr "Se recomienda utilizar imágenes cuadradas de dimensiones 1000px x 1000px en formato PNG con fondo blanco o transparente."
 
 msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.header.label"
 msgstr "Cabecera del certificado"
@@ -76,7 +76,7 @@ msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certifi
 msgstr "Fecha de expedición del certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateDate.description"
-msgstr "Ingrese el contenido de la fecha expedición del certificado. En este campo es necesario que se agreguen etiquetas especiales, mismas que se listan a continuación junto con su descripción:<br><ul><li>{{day_number}}: Día de la expedición</li><li>{{month_name}}: Mes de la expedición</li><li>{{year_number}}: Año de la expedición</li></ul>Al hacer clic en el botón <span class='fas fa-circle-question'></span> de arriba podrás ver un ejemplo de como redactar esta sección."
+msgstr "Ingrese el contenido de la fecha expedición del certificado. En este campo es necesario que se agreguen etiquetas especiales, mismas que se listan a continuación junto con su descripción:<br> <ul> <li>{{day_number}}: Día re la revisión de la expedición en formato de número</li> <li>{{day_text}}: Día re la revisión de la expedición en formato de letra</li> <li>{{month_name}}: Mes re la revisión de la expedición</li> <li>{{year_number}}: Año re la revisión de la expedición</li> <li>{{today_day_number}}: Día actual de la expedición en formato de número</li> <li>{{today_day_text}}: Día actual de la expedición en formato de letra</li> <li>{{today_month_name}}: Mes actual de la expedición</li> <li>{{today_year_number}}: Año actual de la expedición</li> </ul>Al hacer clic en el botón <span class='fas fa-circle-question'></span> de arriba podrás ver un ejemplo de como redactar esta sección."
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGoodbye.label"
 msgstr "Despedida del certificado"
@@ -137,7 +137,7 @@ msgid "plugins.generic.exportReviewerCertificate.reviewer.institution_type_label
 msgstr "Por favor, elija una opción de tipo de institución:"
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.institution_label"
-msgstr "Por favor, ingrese el nombre de su institución:"
+msgstr "Por favor, ingrese la preposición masculina o femenina seguida del nombre de su institución (Ejemplos: de la Universidad, del Instituto):"
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.button_label"
 msgstr "Generar certificado"
@@ -193,3 +193,100 @@ msgstr "noviembre"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.december"
 msgstr "diciembre"
+
+
+
+
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text01"
+msgstr "un"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text02"
+msgstr "dos"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text03"
+msgstr "tres"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text04"
+msgstr "cuatro"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text05"
+msgstr "cinco"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text06"
+msgstr "seis"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text07"
+msgstr "siete"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text08"
+msgstr "ocho"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text09"
+msgstr "nueve"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text10"
+msgstr "diez"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text11"
+msgstr "once"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text12"
+msgstr "doce"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text13"
+msgstr "trece"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text14"
+msgstr "catorce"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text15"
+msgstr "quince"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text16"
+msgstr "dieciséis"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text17"
+msgstr "diecisiete"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text18"
+msgstr "dieciocho"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text19"
+msgstr "diecinueve"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text20"
+msgstr "veinte"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text21"
+msgstr "veintiuno"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text22"
+msgstr "veintidés"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text23"
+msgstr "veintitrés"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text24"
+msgstr "veinticuatro"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text25"
+msgstr "veinticinco"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text26"
+msgstr "veintiséis"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text27"
+msgstr "veintisiete"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text28"
+msgstr "veintiocho"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text29"
+msgstr "veintinueve"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text30"
+msgstr "treinta"
+
+msgid "plugins.generic.exportReviewerCertificate.pdf.day.text31"
+msgstr "treinta y un"

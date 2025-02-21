@@ -8,17 +8,23 @@
  * @class ExportReviewerCertificatePlugin
  * @brief Main class plugin
  * 
- * @author epsomsegura
- * @email segurajaramilloepsom@gmail.com
- * @github https://github.com/epsomsegura
+ * @owner: eScire 
+ * @co_authors: eScire, Epsom Enrique Segura Jaramillo, Araceli Hernández Morales y Joel Torres Hernández
+ * @email: contacto@escire.lat
+ * @github: https://github.com/escire-ojs-plugins/exportReviewerCertificate
  */
 
-use PKP\components\forms\context\ExportReviewerCertificateForm;
+namespace APP\plugins\generic\exportReviewerCertificate;
 
-import('lib.pkp.classes.plugins.GenericPlugin');
-import('lib.pkp.classes.file.FileManager');
+use APP\file\PublicFileManager;
+use APP\i18n\AppLocale;
+use APP\plugins\generic\exportReviewerCertificate\controllers\tab\ExportReviewerCertificateSettingsTabFormHandler;
+use PKP\components\forms\context\ExportReviewerCertificateForm;
+use PKP\core\Registry;
+use PKP\plugins\GenericPlugin;
+use PKP\plugins\Hook;
+
 require_once(dirname(__FILE__) . '/vendor/autoload.php');
-require_once(dirname(__FILE__) . '/src/PDFLib.php');
 
 /**
  * @class ExportReviewerCertificatePlugin
@@ -26,22 +32,34 @@ require_once(dirname(__FILE__) . '/src/PDFLib.php');
  */
 class ExportReviewerCertificatePlugin extends GenericPlugin
 {
-  public $context;
-  public $contextId;
-  public $request;
-  public $baseUrl;
-  public $temporaryFileApiUrl;
+  /**
+   * @see Plugin::getDisplayName()
+   */
+  public function getDisplayName()
+  {
+    return __('plugins.generic.exportReviewerCertificate.name');
+  }
 
-  public function register($category, $path, $mainContextId = NULL)
+  /**
+   * @see Plugin::getDescription()
+   */
+  public function getDescription()
+  {
+    return __('plugins.generic.exportReviewerCertificate.description');
+  }
+
+  public function register($category, $path, $mainContextId = null): bool
   {
     $success = parent::register($category, $path);
+
     if ($success && $this->getEnabled()) {
-      HookRegistry::register('Schema::get::context', [$this, 'addToSchema']);
-      HookRegistry::register('Template::Settings::website::setup', [$this, 'callbackAppearanceTab']);
-      HookRegistry::register('APIHandler::endpoints', [$this, 'callbackSetupEndpoints']);
-      HookRegistry::register('LoadHandler', [$this, 'setPageHandler']);
-      HookRegistry::register('TemplateResource::getFilename', [$this, '_overridePluginTemplates']);
+      Hook::add('Schema::get::context', [$this, 'addToSchema']);
+      Hook::add('Template::Settings::website::setup', [$this, 'callbackAppearanceTab']);
+      Hook::add('APIHandler::endpoints', [$this, 'callbackSetupEndpoints']);
+      Hook::add('LoadHandler', [$this, 'setPageHandler']);
+      Hook::add('TemplateResource::getFilename', [$this, '_overridePluginTemplates']);
     }
+
     return $success;
   }
 
@@ -71,7 +89,6 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
       return ['key' => $localeKey, 'label' => $localeNames[$localeKey]];
     }, $supportedFormLocales);
     $contextApiUrl = $dispatcher->url($request, ROUTE_API, $context->getPath(), 'contexts/' . $context->getId() . "/exportReviewerCertificateSettings");
-    import('classes.file.PublicFileManager');
     $publicFileManager = new PublicFileManager();
     $baseUrl = $request->getBaseUrl() . '/' . $publicFileManager->getContextFilesPath($context->getId());
     $temporaryFileApiUrl = $dispatcher->url($request, ROUTE_API, $context->getPath(), 'temporaryFiles');
@@ -89,33 +106,6 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
     $templateMgr->assign('state', $state);
     $output .= $templateMgr->fetch($this->getTemplateResource('appearanceTab.tpl'));
     return false;
-  }
-
-  public function getName()
-  {
-    return 'exportreviewercertificateplugin';
-  }
-
-  /**
-   * Provide a name for this plugin
-   *
-   * The name will appear in the plugins list where editors can
-   * enable and disable plugins.
-   */
-  public function getDisplayName()
-  {
-    return __('plugins.generic.exportReviewerCertificate.displayName');
-  }
-
-  /**
-   * Provide a description for this plugin
-   *
-   * The description will appear in the plugins list where editors can
-   * enable and disable plugins.
-   */
-  public function getDescription()
-  {
-    return __('plugins.generic.exportReviewerCertificate.description');
   }
 
   /**

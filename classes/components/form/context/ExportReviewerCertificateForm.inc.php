@@ -8,9 +8,10 @@
  * @class ExportReviewerCertificateForm
  * @brief A preset form for configuring a context's export reviewer certificate.
  * 
- * @author epsomsegura
- * @email segurajaramilloepsom@gmail.com
- * @github https://github.com/epsomsegura
+ * @owner: eScire 
+ * @co_authors: eScire, Epsom Enrique Segura Jaramillo, Araceli Hernández Morales y Joel Torres Hernández
+ * @email: contacto@escire.lat
+ * @github: https://github.com/escire-ojs-plugins/exportReviewerCertificate
  */
 
 namespace PKP\components\forms\context;

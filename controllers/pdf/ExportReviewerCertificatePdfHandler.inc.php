@@ -8,12 +8,21 @@
  * @class ExportReviewerCertificatePdfHandler
  * @brief File implemeting the export reviewer certificate in PDF format handler.
  * 
- * @author epsomsegura
- * @email segurajaramilloepsom@gmail.com
- * @github https://github.com/epsomsegura
+ * @owner: eScire 
+ * @co_authors: eScire, Epsom Enrique Segura Jaramillo, Araceli Hernández Morales y Joel Torres Hernández
+ * @email: contacto@escire.lat
+ * @github: https://github.com/escire-ojs-plugins/exportReviewerCertificate
  */
 
-import('classes.handler.Handler');
+use APP\core\Application;
+use APP\facades\Repo;
+use APP\handler\Handler;
+use APP\i18n\AppLocale;
+use APP\plugins\generic\exportReviewerCertificate\PDFLib;
+use PKP\core\JSONMessage;
+use PKP\security\authorization\PolicySet;
+use PKP\security\Role;
+use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
 
 /**
  * @class ExportReviewerCertificatePdfHandler
@@ -27,8 +36,7 @@ class ExportReviewerCertificatePdfHandler extends Handler
 
 	public function __construct()
 	{
-		// Allow just reviewer roles to download certificates
-		$this->addRoleAssignment([ROLE_ID_REVIEWER], ['reviewer', 'download']);
+		$this->addRoleAssignment([Role::ROLE_ID_REVIEWER], ['reviewer', 'download']);
 		// Set global variables
 		$this->locale = AppLocale::getLocale();
 		$this->certificate_dataset = [
@@ -101,7 +109,9 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		$this->journal();
 		// Set submission data into certificate dataset
 		$this->submission($params['submission']);
+		// dd($this->certificate_dataset);
 		// 
+		import('plugins.generic.exportReviewerCertificate.src.PDFLib');
 		return (new PDFLib($this->certificate_dataset))->stream();
 	}
 
@@ -154,15 +164,19 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	private function submission($submissionId)
 	{
 		if (Application::get()->getRequest()->getContext()) {
-			if ($submission = DAORegistry::getDAO('SubmissionDAO')->getById($submissionId)) {
+			if ($submission = Repo::submission()->get($submissionId)) {
 				$submission = json_decode(json_encode($submission->_data, JSON_UNESCAPED_UNICODE));
-				if ($publication = $submission->publications[0]) {
+				if ($publication = $submission->publications->$submissionId) {
 					$locale = $this->locale;
-					$publication = json_decode(json_encode($publication->_data));
+					$publication = $publication->_data;
 					$this->certificate_dataset['publication_title'] = $publication->title->$locale;
 					$this->certificate_dataset['day_number'] = date('d', strtotime($publication->lastModified));
 					$this->certificate_dataset['month_name'] =  $this->monthText($publication->lastModified);
 					$this->certificate_dataset['year_number'] = date('Y', strtotime($publication->lastModified));
+					$this->certificate_dataset['today_day_number'] = date('d');
+					$this->certificate_dataset['today_month_number'] = date('m');
+					$this->certificate_dataset['today_month_name'] =  $this->monthText(date('Y-m-d'));
+					$this->certificate_dataset['today_year_number'] = date('Y');
 				}
 			}
 		}
