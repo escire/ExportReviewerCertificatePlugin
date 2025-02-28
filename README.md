@@ -37,7 +37,7 @@ git clone --branch ojs34_export_reviewer_certificate_plugin --single-branch http
 3. That´s all, now you can enable and configure the plugin to each journal
 
 ### Using tar.gz file
-1. Download OJS 3.4 plugin version using tar.gz compressed mode [🌐 Download link](https://github.com/epsomsegura/exportReviewerCertificate/archive/refs/tags/V1.1.0.tar.gz)
+1. Download OJS 3.4 plugin version using tar.gz compressed mode [🌐 Download link](https://github.com/escire-ojs-plugins/exportReviewerCertificate/archive/refs/tags/V2.0.0.1.tar.gz)
 2. Login into OJS 3.4 and go to journal website settings.
 3. Open Plugin modules tab and import tar.gz plugin
 4. That´s all, now you can enable and configure the plugin to each journal
