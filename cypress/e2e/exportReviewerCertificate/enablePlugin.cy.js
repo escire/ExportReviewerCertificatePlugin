@@ -1,7 +1,7 @@
 describe('Export Reviewer Certificate plugin tests', () => {
   it('Export Reviewer Certificate is enable', function () {
-    cy.login('mcruzescire', 'PqaEtiiZ.2So.');
-    cy.visit('https://turia.uv.test/index.php/celestinesca/management/settings/website#plugins');
+    cy.login('admin', 'fja-aGHSsj30aosk32');
+    cy.visit('https://revistaoccv.test/index.php/occv/management/settings/website#plugins');
     cy.get('#cell-exportreviewercertificateplugin-name').should('exist').then(($element) => {
       cy.get('[id*="select-cell-exportreviewercertificateplugin-enable"]').should('exist')
         .then(($checkbox) => {

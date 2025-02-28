@@ -1,8 +1,8 @@
 describe('Export Reviewer Certificate plugin tests', () => {
   it('Configure Export Reviewer Certificate plugin into digital journal', function () {
     let lang;
-    cy.login('mcruzescire', 'PqaEtiiZ.2So.');
-    cy.visit('https://turia.uv.test/index.php/celestinesca/management/settings/website');
+    cy.login('admin', 'fja-aGHSsj30aosk32');
+    cy.visit('https://revistaoccv.test/index.php/occv/management/settings/website');
     cy.get('#setup-button').click();
     cy.get('html').invoke('attr', 'lang').then((lang) => {
       lang = lang.replace('-','_');
@@ -22,19 +22,19 @@ describe('Export Reviewer Certificate plugin tests', () => {
           cy.get('#exportReviewerCertificateSettings-certificateEditorSignature-altText').clear().type('Firma');
 
           let certificationGretting = 'certificationGretting 1';
-          cy.get('div#exportReviewerCertificateSettings-certificateGreeting-control-'+lang).clear().type(certificationGretting, { parseSpecialCharSequences: false });
+          cy.get('textarea#exportReviewerCertificateSettings-certificateGreeting-control-'+lang).invoke('attr','style','display:block !important;').clear().type(certificationGretting, { parseSpecialCharSequences: false, force: true }).invoke('attr','style','display:none !important;');
           
           let certificateContent = "{{reviewer_title}} {{reviewer_fullname}} ({{reviewer_institution}}) ha evaluado el envío «{{publication_title}}» para la revista académica Testing.";
-          cy.get('div#exportReviewerCertificateSettings-certificateContent-control-'+lang).clear().type(certificateContent, { parseSpecialCharSequences: false });
+          cy.get('textarea#exportReviewerCertificateSettings-certificateContent-control-'+lang).invoke('attr','style','display:block !important;').clear().type(certificateContent, { parseSpecialCharSequences: false, force: true }).invoke('attr','style','display:none !important;');
           
           let certificationInstitutionDescription = "Esta es una prueba de contenido.";
-          cy.get('div#exportReviewerCertificateSettings-certificateInstitutionDescription-control-'+lang).clear().type(certificationInstitutionDescription, { parseSpecialCharSequences: false });
+          cy.get('textarea#exportReviewerCertificateSettings-certificateInstitutionDescription-control-'+lang).invoke('attr','style','display:block !important;').clear().type(certificationInstitutionDescription, { parseSpecialCharSequences: false, force: true }).invoke('attr','style','display:none !important;');
           
           let certificateDate = "Y, para que así conste, se expide este certificado a {{today_day_number}} de {{today_month_name}} de {{today_year_number}}.";
-          cy.get('div#exportReviewerCertificateSettings-certificateDate-control-'+lang).clear().type(certificateDate, { parseSpecialCharSequences: false });
+          cy.get('textarea#exportReviewerCertificateSettings-certificateDate-control-'+lang).invoke('attr','style','display:block !important;').clear().type(certificateDate, { parseSpecialCharSequences: false, force: true }).invoke('attr','style','display:none !important;');
           
           let certificateGoodbye = "Y, para que así conste, se expide este certificado a {{today_day_number}} de {{today_month_name}} de {{today_year_number}}.";
-          cy.get('div#exportReviewerCertificateSettings-certificateGoodbye-control-'+lang).clear().type(certificateGoodbye, { parseSpecialCharSequences: false });
+          cy.get('textarea#exportReviewerCertificateSettings-certificateGoodbye-control-'+lang).invoke('attr','style','display:block !important;').clear().type(certificateGoodbye, { parseSpecialCharSequences: false, force: true }).invoke('attr','style','display:none !important;');
           
           let certificateEditorName = "Amaranta Saguar García (Secretaria)";
           cy.get('#exportReviewerCertificateSettings-certificateEditorName-control').clear().type(certificateEditorName);
