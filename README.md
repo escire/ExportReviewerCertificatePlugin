@@ -27,21 +27,33 @@ This is a OJS 3.3 plugin that allows reviewers to download evaluation completion
 ### Cloning from github repository
 If you have server access, you can clone this repo into <ojs_root_dir>/plugins/generic directory following this steps:
 
-1. Go to **/<ojs_root_dir>/plugins/generic** replacing **<ojs_root_dir>** with your project path
-```
-cd /<ojs_root_dir>/plugins/generic
-```
-2. Clone this repo using **ojs33_export_reviewer_certificate_plugin** branch from plugin´s [github repository](https://github.com/escire-ojs-plugins/exportReviewerCertificate/tree/ojs33_export_reviewer_certificate_plugin)
-```
-git clone --branch ojs33_export_reviewer_certificate_plugin --single-branch https://github.com/escire-ojs-plugins/exportReviewerCertificate/tree/ojs33_export_reviewer_certificate_plugin
-```
-3. That´s all, now you can enable and configure the plugin to each journal
+1. Clone the repository into the **<OJS_ROOT_DIR>/plugins/generic** directory using the following command
+    ```
+    git clone https://github.com/escire/ExportReviewerCertificatePlugin.git ExportReviewerCertificatePlugin
+    ```
+2. Verify that the download was completed with the name ExportReviewerCertificatePlugin.
+3. Navigate to the plugin directory.
+4. Set the plugin branch compatible with the OJS version where it will be deployed:
+
+    For OJS 3.3:
+    ````
+    git checkout ojs33_export_reviewer_certificate_plugin
+    ````
+
+    For OJS 3.4:
+    ````
+    git checkout ojs34_export_reviewer_certificate_plugin
+    ````
+5. Log in as an administrator and go to **Settings > Website > Plugins**, then enable the **ExportReviewerCertificatePlugin**.
+6. Configure the plugin so it works correctly with the journal you will use.
 
 ### Using tar.gz file
 1. Download OJS 3.3 plugin version using tar.gz compressed mode [🌐 Download link](https://github.com/escire-ojs-plugins/exportReviewerCertificate/releases/tag/V1.1.5.2)
-2. Login into OJS 3.3 and go to journal website settings.
-3. Open Plugin modules tab and import tar.gz plugin
-4. That´s all, now you can enable and configure the plugin to each journal
+2. Inflate the file and rename the plugin name removing the version number, folder name must be exportReviewerCertificate
+3. Compress the exportReviewerCertificate folder and prepare to upload
+4. Login into OJS 3.3 and go to journal website settings.
+5. Open Plugin modules tab and import tar.gz plugin
+6. That´s all, now you can enable and configure the plugin to each journal
 
 ## Settings
 
