@@ -102,6 +102,7 @@ class PDFLib
                     font-size: 20px !important; font-style: normal !important; text-align: center !important; font-weight: lighter !important;
                 }
                 div.sender--container {
+                    position: relative;
                     font-family: \'Times New Roman\', Times, serif; font-size: 16px; text-align: center; line-height: 1.2rem; margin-bottom: 2rem;
                 }
                 div.sender--container div {
@@ -110,10 +111,14 @@ class PDFLib
                 div.sender--container div img {
                     position: relative; height: 100%; max-height: 100%; opacity: 0.9;
                 }
-                div.sender--container span {
+                div.signature--text{
+                    margin-top: -30px !important;
+                    z-index:3 !important;
+                }
+                div.signature--text span {
                     display: flex; flex-direction: row;
                 }
-                div.sender--container span:nth-of-type(1) {
+                div.signature--text span:nth-of-type(1) {
                     text-transform: uppercase;
                 }
             </style>
@@ -133,7 +138,10 @@ class PDFLib
         $pdfHtml .= ($this->keywords['certificate_date'] ?? '-').'<br>';
         $pdfHtml .= ($this->keywords['certificate_goodbye'] ?? '-').'<br>';
         $pdfHtml .= '<div class="sender--container">
-        <div><img src="'.$this->keywords['certificate_editor_sign'].'" alt="'.$this->keywords['certificate_editor_name'].' signature" /></div>
+        <div class="signature--container">
+        <img src="'.$this->keywords['certificate_editor_sign'].'" alt="'.$this->keywords['certificate_editor_name'].' signature" />
+        </div>
+        <div class="signature--text">
         <span>'.$this->keywords['certificate_editor_name'].'</span>';
         if (array_key_exists('certificate_editor_institution', $this->keywords) && isset($this->keywords['certificate_editor_institution'])) {
             $pdfHtml .= '<span>'.$this->keywords['certificate_editor_institution'].'</span>';
@@ -141,22 +149,16 @@ class PDFLib
         if (array_key_exists('certificate_editor_email', $this->keywords) && isset($this->keywords['certificate_editor_email'])) {
             $pdfHtml .= '<span>Email: <a href="mailto:'.$this->keywords['certificate_editor_email'].'">'.$this->keywords['certificate_editor_email'].'</a><span>';
         }
-        $pdfHtml .= '</div>';
+        $pdfHtml .= '</div></div>';
         $pdfHtml .= '</div>
         </body>
         </html>';
-        
-        if (array_key_exists('reviewer_gender', $this->keywords) && isset($this->keywords['reviewer_gender'])) {
-            $pdfHtml = str_replace('{{reviewer_gender}}',$this->keywords['reviewer_gender'],$pdfHtml);
-        }
+
         if (array_key_exists('reviewer_title', $this->keywords) && isset($this->keywords['reviewer_title'])) {
             $pdfHtml = str_replace('{{reviewer_title}}',$this->keywords['reviewer_title'],$pdfHtml);
         }
         if (array_key_exists('reviewer_fullname', $this->keywords) && isset($this->keywords['reviewer_fullname'])) {
             $pdfHtml = str_replace('{{reviewer_fullname}}',$this->keywords['reviewer_fullname'],$pdfHtml);
-        }
-        if (array_key_exists('reviewer_institution', $this->keywords) && isset($this->keywords['reviewer_institution'])) {
-            $pdfHtml = str_replace('{{reviewer_institution}}'," (".$this->keywords['reviewer_institution'].")",$pdfHtml);
         }
         else{
             $pdfHtml = str_replace('{{reviewer_institution}}',"",$pdfHtml);
