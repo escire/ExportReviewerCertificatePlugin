@@ -1,6 +1,6 @@
 # Export Reviewer Certificate Plugin for OJS
 
-This is a OJS 3.3 plugin that allows reviewers to download evaluation completion certificate per reviewed article.
+This is a OJS 3.4 plugin that allows reviewers to download evaluation completion certificate per reviewed article.
 
 ## Table of content
 - [Prerequisites](#prerequisites)
@@ -16,9 +16,9 @@ This is a OJS 3.3 plugin that allows reviewers to download evaluation completion
 
 ## Prerequisites
 
-- Open Journal Systems - OJS 3.3 [🌐 Information/Download link](https://pkp.sfu.ca/software/ojs/download/archive/) 
-- PHP 7.4 [🌐 Information link](https://www.php.net/releases/7_4_0.php)
-- PHP GD extension (php7.4-gd) [🌐 Information link](https://www.php.net/manual/en/book.image.php)
+- Open Journal Systems - OJS 3.4 [🌐 Information/Download link](https://pkp.sfu.ca/software/ojs/download/archive/) 
+- PHP 7.4|8+ 
+- PHP GD extension 
 - Linux server is preferred
 
 
@@ -27,33 +27,21 @@ This is a OJS 3.3 plugin that allows reviewers to download evaluation completion
 ### Cloning from github repository
 If you have server access, you can clone this repo into <ojs_root_dir>/plugins/generic directory following this steps:
 
-1. Clone the repository into the **<OJS_ROOT_DIR>/plugins/generic** directory using the following command
-    ```
-    git clone https://github.com/escire/ExportReviewerCertificatePlugin.git ExportReviewerCertificatePlugin
-    ```
-2. Verify that the download was completed with the name ExportReviewerCertificatePlugin.
-3. Navigate to the plugin directory.
-4. Set the plugin branch compatible with the OJS version where it will be deployed:
-
-    For OJS 3.3:
-    ````
-    git checkout ojs33_export_reviewer_certificate_plugin
-    ````
-
-    For OJS 3.4:
-    ````
-    git checkout ojs34_export_reviewer_certificate_plugin
-    ````
-5. Log in as an administrator and go to **Settings > Website > Plugins**, then enable the **ExportReviewerCertificatePlugin**.
-6. Configure the plugin so it works correctly with the journal you will use.
+1. Go to **/<ojs_root_dir>/plugins/generic** replacing **<ojs_root_dir>** with your project path
+```
+cd /<ojs_root_dir>/plugins/generic
+```
+2. Clone this repo using **ojs34_export_reviewer_certificate_plugin** branch from plugin´s [github repository](https://github.com/epsomsegura/exportReviewerCertificate)
+```
+git clone --branch ojs34_export_reviewer_certificate_plugin --single-branch https://github.com/epsomsegura/exportReviewerCertificate.git
+```
+3. That´s all, now you can enable and configure the plugin to each journal
 
 ### Using tar.gz file
-1. Download OJS 3.3 plugin version using tar.gz compressed mode [🌐 Download link](https://github.com/escire-ojs-plugins/exportReviewerCertificate/releases/tag/V1.1.5.2)
-2. Inflate the file and rename the plugin name removing the version number, folder name must be exportReviewerCertificate
-3. Compress the exportReviewerCertificate folder and prepare to upload
-4. Login into OJS 3.3 and go to journal website settings.
-5. Open Plugin modules tab and import tar.gz plugin
-6. That´s all, now you can enable and configure the plugin to each journal
+1. Download OJS 3.4 plugin version using tar.gz compressed mode [🌐 Download link](https://github.com/escire-ojs-plugins/exportReviewerCertificate/archive/refs/tags/V2.0.0.1.tar.gz)
+2. Login into OJS 3.4 and go to journal website settings.
+3. Open Plugin modules tab and import tar.gz plugin
+4. That´s all, now you can enable and configure the plugin to each journal
 
 ## Settings
 
@@ -63,6 +51,42 @@ You can found a basic manual slides clicking this [link](https://docs.google.com
 ### Languages
 This plugin version has English, Spanish, French and Portuguese languages but you can add new languages cloning any **country local code named folder** located into plugin directory /<ojs_root_dir>/plugins/generic/exportReviewerCertificate/locale, renaming folder name using **Country local code standard** and editing **locale.po** file content without deleting any code line. If you don't know the country local code you want to add you can search this on [saimana.com](https://saimana.com/list-of-country-locale-code/).
 
+## Cypress tests
+First, you should to install some npm packages using this commands into OJS root project directory:
+
+````
+- npm install --save-dev cypress
+- npm install --save-dev cypress-file-upload
+````
+Then, configure the **cypress.config.js** file, this is an example:
+````
+const { defineConfig } = require('cypress');
+
+module.exports = defineConfig({
+    e2e: {
+        setupNodeEvents(on, config) {
+            // Agrega aquí el contenido de plugins/index.js
+            return config;
+        },
+        baseUrl: 'http://localhost/, // You can replace this URL with yours
+        specPattern: 'plugins/generic/exportReviewerCertificate/cypress/e2e/**/*.cy.{js,jsx,ts,tsx}', // Specs directory
+        supportFile: 'plugins/generic/exportReviewerCertificate/cypress/support/e2e.js', // Support file
+    },
+});
+````
+You can update the specPattern and directory properties with your project settings.
+
+Finally, execute this command to run tests in terminal:
+
+````
+- npx cypress run
+````
+
+If you want to run tests using graphic interface, run this command:
+````
+- npx cypress open
+````
+Follow the steps into main form and run.
 
 ## Cypress tests
 First, you should to install some npm packages using this commands into OJS root project directory:

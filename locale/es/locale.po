@@ -1,4 +1,4 @@
-msgstr ""
+msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
@@ -11,185 +11,188 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "plugins.generic.exportReviewerCertificate.displayName"
-msgstr "Exporter le certificat du réviseur"
+msgid "plugins.generic.exportReviewerCertificate.name"
+msgstr "Exportar certificado del evaluador"
 
 msgid "plugins.generic.exportReviewerCertificate.description"
-msgstr "Ce plugin permet aux réviseurs d'exporter leurs certificats par éléments révisés."
+msgstr "Este plugin permite a los evaluadores descargar sus certificados por revisión realizada."
 
 msgid "plugins.generic.exportReviewerCertificate.tabname"
-msgstr "Certificat du réviseur"
+msgstr "Certificado revisor"
+
 
 
 
 
 msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.label"
-msgstr "Paramètres de mise en page du certificat"
+msgstr "Configuraciones del diseño del certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.description"
-msgstr "Cette section gère les détails de la conception du certificat."
+msgstr "En esta sección se administran los detalles del diseño del certificado."
 
 msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.watermark.label"
-msgstr "Filigrane du certificat"
+msgstr "Marca de agua del certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.watermark.description"
-msgstr "Il est recommandé d'utiliser des images PNG carrées avec une largeur de 1 000 px et une hauteur de 1 000 px et un arrière-plan blanc ou transparent."
+msgstr "Se recomienda utilizar imágenes cuadradas de dimensiones 1000px x 1000px en formato PNG con fondo blanco o transparente."
 
 msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.header.label"
-msgstr "En-tête du certificat"
+msgstr "Cabecera del certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.designDocumentSettings.header.description"
-msgstr "Il est recommandé d'utiliser des images PNG d'une largeur de 600 px et d'une hauteur de 110 px et d'un fond blanc ou transparent."
+msgstr "Se recomienda usar imágenes de dimensiones de 600px de ancho por 110px de alto con fondo blaco o transparente."
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.label"
-msgstr "Paramètres du contenu du certificat"
+msgstr "Configuraciones del contenido del documento"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.description"
-msgstr "Cette section gère les détails du contenu du certificat."
+msgstr "En esta sección se administran los detalles del contenido del certificado."
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGreeting.label"
-msgstr "Certificat de bienvenue"
+msgstr "Saludo del certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGreeting.description"
-msgstr "Entrez le message d'accueil du certificat (exemple, à qui de droit :)"
+msgstr "Ingresa el saludo del certificado (Ejemplo, A quien corresponda:)"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateContent.label"
-msgstr "Contenu du certificat"
+msgstr "Contenido del certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateContent.description"
-msgstr "Entrez le contenu du certificat. Dans ce champ, il est nécessaire d'ajouter des balises spéciales, qui sont répertoriées ci-dessous avec leur description :<br><ul><li>{{reviewer_gender}} : Sexe du réviseur</ li><li>{{reviewer_title }} : Titre de l'évaluateur</li><li>{{reviewer_fullname}} : Nom complet de l'évaluateur</li><li>{{reviewer_institution}} : Institution à laquelle le le critique appartient</li><li> {{publication_title}} : Titre de la publication que vous avez révisée </li></ul>En cliquant sur le bouton avobe <span class=\"fa fa-question-circle\">< /span> vous verrez un exemple de la façon d'écrire cette section."
+msgstr "Ingrese el contenido del certificado. En este campo es necesario que se agreguen etiquetas especiales, mismas que se listan a continuación junto con su descripción:<br><ul><li>{{reviewer_title}}: Título del revisor</li><li>{{reviewer_fullname}}: Nombre completo del revisor</li><li>{{publication_title}}: Título de la publicación que revisó</li></ul>Al hacer clic en el botón <span class='fas fa-circle-question'></span> de arriba podrás ver un ejemplo de como redactar esta sección."
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.label"
-msgstr "Informations du journal du certificat"
+msgstr "Información de la revista que emite el certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.description"
-msgstr "Entrez les informations du journal qui émet le certificat. Vous pouvez inclure ce que vous jugez nécessaire."
+msgstr "Ingrese la información de la revista que emite el certificado. Puede incluir lo que considere necesario."
+
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.label"
+msgstr "Información de la revista"
+
+msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.description"
+msgstr "Ingrese la información de la revista que emite el certificado. Puede incluir lo que considere necesario."
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateDate.label"
-msgstr "Date d'émission du certificat"
+msgstr "Fecha de expedición del certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateDate.description"
-msgstr "Entrez le contenu de la date d'émission du certificat. Dans ce champ, il est nécessaire d'ajouter des balises spéciales, qui sont répertoriées ci-dessous avec leur description :<br> <ul> <li>{{day_number}} : Jour d'expédition au format numérique</ li> <li>{{day_text}} : Jour d'expédition au format texte</ li> <li>{{month_name}} : Mois de l'expédition</li> <li>{{year_number}} : Année de l'expédition</li> <li>{{today_day_number}} : Jour d'expédition d'aujourd'hui au format numérique</li> <li>{{today_day_text}} : Jour d'expédition d'aujourd'hui au format texte</li> <li>{{today_month_name}} : Aujourd'hui, mois de l'expédition</li> <li>{{today_year_number}} : Aujourd'hui, année de l'expédition</li> </ul>En cliquant sur le bouton <span class=\" fa fa-question-circle\"></span> ci-dessus, vous pouvez voir un exemple de la façon d'écrire cette section."
+msgstr "Ingrese el contenido de la fecha expedición del certificado. En este campo es necesario que se agreguen etiquetas especiales, mismas que se listan a continuación junto con su descripción:<br> <ul> <li>{{day_number}}: Día re la revisión de la expedición en formato de número</li> <li>{{day_text}}: Día re la revisión de la expedición en formato de letra</li> <li>{{month_name}}: Mes re la revisión de la expedición</li> <li>{{year_number}}: Año re la revisión de la expedición</li> <li>{{today_day_number}}: Día actual de la expedición en formato de número</li> <li>{{today_day_text}}: Día actual de la expedición en formato de letra</li> <li>{{today_month_name}}: Mes actual de la expedición</li> <li>{{today_year_number}}: Año actual de la expedición</li> </ul>Al hacer clic en el botón <span class='fas fa-circle-question'></span> de arriba podrás ver un ejemplo de como redactar esta sección."
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGoodbye.label"
-msgstr "Certificat au revoir"
+msgstr "Despedida del certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateGoodbye.description"
-msgstr "Entrez le contenu du certificat d'au revoir. (Exemple, Cordialement,)."
+msgstr "Ingrese el contenido de la despedida del certificado. (Ejemplo, Cordialmente,)."
 
 msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.label"
-msgstr "Paramètres de signature du certificat"
+msgstr "Configuración de firma del certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.description"
-msgstr "Cette section gère les détails de signature du certificat."
+msgstr "En esta sección se administran los detalles de la firma del certificado."
 
 msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSignature.label"
-msgstr "Signature de l'éditeur (fond transparent)"
+msgstr "Firma del editor (fondo transparente)"
 
 msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSignature.description"
-msgstr "Il est recommandé d'utiliser une image png carrée es avec un arrière-plan transparent d'une largeur de 500 px et d'une hauteur de 500 px."
+msgstr "Se recomienda utilizar imágenes png cuadradas de fondo transparente con 500px de ancho y 500px de alto."
 
 msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorName.label"
-msgstr "Nom de l'éditeur"
+msgstr "Nombre del editor"
 
 msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorInstitution.label"
-msgstr "Institution de l'éditeur"
+msgstr "Institución del editor"
 
 msgid "plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorEmail.label"
-msgstr "E-mail de l'éditeur"
+msgstr "Email del editor"
 
 
 
 
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.instruction"
-msgstr "Avant de générer votre certificat, il est nécessaire d'effectuer quelques configurations. Veuillez remplir le formulaire suivant pour activer le bouton <strong>Générer le certificat</strong> et continuer le téléchargement."
+msgstr "Antes de generar su certificado es necesario realizar algunas configuraciones. Por favor, completa el siguiente formulario para habilitar el botón de <strong>Generar certificado</strong> y continuar con la descarga del mismo."
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.selectOption"
-msgstr "Sélectionner une option"
+msgstr "Seleccione una opción"
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.maleOption"
-msgstr "Homme"
+msgstr "Hombre"
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.femaleOption"
-msgstr "Femme"
+msgstr "Mujer"
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.independentTypeOption"
-msgstr "Indépendant"
+msgstr "Independiente"
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.institutionTypeOption"
-msgstr "Institution"
+msgstr "Institución"
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.genre_label"
-msgstr "Veuillez choisir le genre que vous souhaitez activer :"
+msgstr "Por favor, elija el género que desea activar:"
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.title_label"
-msgstr "Veuillez saisir le titre que vous souhaitez afficher :"
+msgstr "Por favor, ingrese el título que desea mostrar:"
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.institution_type_label"
-msgstr "Veuillez choisir une option de type d'institution :"
+msgstr "Por favor, elija una opción de tipo de institución:"
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.institution_label"
-msgstr "Veuillez saisir la préposition masculine ou féminine suivie du nom de votre établissement (Exemples : de l'Université, de l'Institut):"
+msgstr "Por favor, ingrese la preposición masculina o femenina seguida del nombre de su institución (Ejemplos: de la Universidad, del Instituto):"
 
 msgid "plugins.generic.exportReviewerCertificate.reviewer.button_label"
-msgstr "Générer un certificat"
+msgstr "Generar certificado"
 
-msgid "plugins.generic.exportReviewerCertificate.reviewer.button_title"
-msgstr "Télécharger le certificat de fin d'évaluation à partir de l'article"
-
-
-
-
+msgid "plugins.generic.exportReviewerCertificate.button.title"
+msgstr "Descargar certificado de finalización de revisión del artículo"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.male"
-msgstr " "
+msgstr "el"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.female"
-msgstr " "
+msgstr "la"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.independent_reviewer"
-msgstr "réviseur indépendant"
+msgstr "investigador independiente"
 
 
 
 
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.january"
-msgstr "janvier"
+msgstr "enero"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.february"
-msgstr "février"
+msgstr "febrero"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.march"
-msgstr "mars"
+msgstr "marzo"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.april"
-msgstr "avril"
+msgstr "abril"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.may"
-msgstr "peut"
+msgstr "mayo"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.june"
-msgstr "juin"
+msgstr "junio"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.july"
-msgstr "juillet"
+msgstr "julio"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.august"
-msgstr "août"
+msgstr "agosto"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.september"
-msgstr "septembre"
+msgstr "septiembre"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.october"
-msgstr "octobre"
+msgstr "octubre"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.november"
-msgstr "novembre"
+msgstr "noviembre"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.month.december"
-msgstr "décembre"
+msgstr "diciembre"
 
 
 
@@ -199,91 +202,91 @@ msgid "plugins.generic.exportReviewerCertificate.pdf.day.text01"
 msgstr "un"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text02"
-msgstr "deux"
+msgstr "dos"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text03"
-msgstr "trois"
+msgstr "tres"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text04"
-msgstr "quatre"
+msgstr "cuatro"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text05"
-msgstr "cinq"
+msgstr "cinco"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text06"
-msgstr "six"
+msgstr "seis"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text07"
-msgstr "sept"
+msgstr "siete"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text08"
-msgstr "huit"
+msgstr "ocho"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text09"
-msgstr "neuf"
+msgstr "nueve"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text10"
-msgstr "dix"
+msgstr "diez"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text11"
-msgstr "onze"
+msgstr "once"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text12"
-msgstr "dormitar"
+msgstr "doce"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text13"
-msgstr "treize"
+msgstr "trece"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text14"
-msgstr "qiatorze"
+msgstr "catorce"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text15"
-msgstr "quinze"
+msgstr "quince"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text16"
-msgstr "seize"
+msgstr "dieciséis"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text17"
-msgstr "dix-sept"
+msgstr "diecisiete"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text18"
-msgstr "diz-huit"
+msgstr "dieciocho"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text19"
-msgstr "dic-neuf"
+msgstr "diecinueve"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text20"
-msgstr "vingt"
+msgstr "veinte"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text21"
-msgstr "vingt et un"
+msgstr "veintiuno"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text22"
-msgstr "vingt deux"
+msgstr "veintidés"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text23"
-msgstr "vingt trois"
+msgstr "veintitrés"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text24"
-msgstr "vingt quatre"
+msgstr "veinticuatro"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text25"
-msgstr "vingt cinq"
+msgstr "veinticinco"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text26"
-msgstr "vingt six"
+msgstr "veintiséis"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text27"
-msgstr "vingt sept"
+msgstr "veintisiete"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text28"
-msgstr "vingt huit"
+msgstr "veintiocho"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text29"
-msgstr "vingt neuf"
+msgstr "veintinueve"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text30"
-msgstr "trente"
+msgstr "treinta"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text31"
-msgstr "trente et un"
+msgstr "treinta y un"

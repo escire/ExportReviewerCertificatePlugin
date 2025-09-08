@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "plugins.generic.exportReviewerCertificate.displayName"
+msgid "plugins.generic.exportReviewerCertificate.name"
 msgstr "Export reviewer certificate"
 
 msgid "plugins.generic.exportReviewerCertificate.description"
@@ -57,7 +57,7 @@ msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certifi
 msgstr "Certificate content"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateContent.description"
-msgstr "Enter the content of the certificate. In this field it is necessary to add special tags, which are listed below along with their description:<br><ul><li>{{reviewer_gender}}: Gender of the reviewer</li><li>{{reviewer_title }}: Title of the reviewer</li><li>{{reviewer_fullname}}: Full name of the reviewer</li><li>{{reviewer_institution}}: Institution to which the reviewer belongs</li><li> {{publication_title}}: Title of the publication you reviewed </li></ul>By clicking the button avobe <span class=\"fa fa-question-circle\"></span> you will see an example of how to write this section."
+msgstr "Enter the content of the certificate. In this field it is necessary to add special tags, which are listed below along with their description:<br><ul><li>{{reviewer_title }}: Title of the reviewer</li><li>{{reviewer_fullname}}: Full name of the reviewer</li><li> {{publication_title}}: Title of the publication you reviewed </li></ul>By clicking the button avobe <span class=\"fa fa-question-circle\"></span> you will see an example of how to write this section."
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.label"
 msgstr "Certificate journal information"
