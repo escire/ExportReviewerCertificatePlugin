@@ -14,6 +14,13 @@
  * @github: https://github.com/escire-ojs-plugins/exportReviewerCertificate
  */
 
+ namespace APP\plugins\generic\exportReviewerCertificate\controllers\tab;
+
+use APP\core\Application;
+use APP\file\PublicFileManager;
+use APP\pages\management\SettingsHandler;
+use PKP\db\DAORegistry;
+
 import('pages/management/SettingsHandler');
 import('lib.pkp.classes.validation.ValidatorFactory');
 
