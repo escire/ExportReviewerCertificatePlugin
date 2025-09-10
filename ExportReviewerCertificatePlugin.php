@@ -7,8 +7,8 @@
  *
  * @class ExportReviewerCertificatePlugin
  * @brief Main class plugin
- * 
- * @owner: eScire 
+ *
+ * @owner: eScire
  * @co_authors: eScire, Epsom Enrique Segura Jaramillo, Araceli Hernández Morales y Joel Torres Hernández
  * @email: contacto@escire.lat
  * @github: https://github.com/escire-ojs-plugins/exportReviewerCertificate
@@ -183,7 +183,7 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
-    
+
     $schema->properties->certificateContent = (object) [
       'type' => 'string',
       'multilingual' => true,
@@ -204,7 +204,7 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
-    
+
     $schema->properties->certificateGoodbye = (object) [
       'type' => 'string',
       'multilingual' => true,
@@ -239,7 +239,7 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
-    
+
     $schema->properties->certificateEditorInstitution = (object) [
       'type' => 'string',
       'multilingual' => false,
@@ -253,7 +253,15 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
-    
+
     return false;
+  }
+
+  /**
+   * @copydoc Plugin::getInstallMigration()
+  */
+  public function getInstallMigration()
+  {
+    return new ExportReviewerCertificateMigration();
   }
 }
