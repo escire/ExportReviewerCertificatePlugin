@@ -7,8 +7,8 @@
  *
  * @class ExportReviewerCertificatePdfHandler
  * @brief File implemeting the export reviewer certificate in PDF format handler.
- * 
- * @owner: eScire 
+ *
+ * @owner: eScire
  * @co_authors: eScire, Epsom Enrique Segura Jaramillo, Araceli Hernández Morales y Joel Torres Hernández
  * @email: contacto@escire.lat
  * @github: https://github.com/escire-ojs-plugins/exportReviewerCertificate
@@ -23,6 +23,7 @@ use PKP\core\JSONMessage;
 use PKP\security\authorization\PolicySet;
 use PKP\security\Role;
 use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
+use APP\plugins\generic\exportReviewerCertificate\repositories\ReviewerCertificateRepository;
 
 /**
  * @class ExportReviewerCertificatePdfHandler
@@ -31,11 +32,14 @@ use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
 class ExportReviewerCertificatePdfHandler extends Handler
 {
 	private $_request;
-	private $locale;
 	private $certificate_dataset;
+	private $locale;
+	private $review_certificate;
+	private $reviewCertificateRepository;
 
 	public function __construct()
 	{
+		$this->reviewCertificateRepository = new ReviewerCertificateRepository();
 		$this->addRoleAssignment([Role::ROLE_ID_REVIEWER], ['reviewer', 'download']);
 		// Set global variables
 		$this->locale = AppLocale::getLocale();
@@ -89,6 +93,8 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		if (!isset($params['submission'])) {
 			return new JSONMessage("Error", "Submission not setted");
 		}
+		$this->review_certificate = $this->reviewCertificateRepository->getReviewerCertificate($currentUser->_data['id'], $params['submission']);
+
 		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "c.";
 		// Set reviewer data into certificate dataset
 		$this->reviewer();
@@ -96,8 +102,11 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		$this->journal();
 		// Set submission data into certificate dataset
 		$this->submission($params['submission']);
-		// dd($this->certificate_dataset);
-		// 
+
+		if (!$this->review_certificate) {
+			$this->reviewCertificateRepository->registerReviewerCertificate($currentUser->_data['id'], $params['submission']);
+		}
+
 		import('plugins.generic.exportReviewerCertificate.src.PDFLib');
 		return (new PDFLib($this->certificate_dataset))->stream();
 	}
@@ -160,10 +169,10 @@ class ExportReviewerCertificatePdfHandler extends Handler
 					$this->certificate_dataset['day_number'] = date('d', strtotime($publication->lastModified));
 					$this->certificate_dataset['month_name'] =  $this->monthText($publication->lastModified);
 					$this->certificate_dataset['year_number'] = date('Y', strtotime($publication->lastModified));
-					$this->certificate_dataset['today_day_number'] = date('d');
-					$this->certificate_dataset['today_month_number'] = date('m');
-					$this->certificate_dataset['today_month_name'] =  $this->monthText(date('Y-m-d'));
-					$this->certificate_dataset['today_year_number'] = date('Y');
+					$this->certificate_dataset['today_day_number'] =  ($this->review_certificate ? date('d', strtotime($this->review_certificate['created_at'])) : date('d'));
+					$this->certificate_dataset['today_month_number'] = ($this->review_certificate ? date('m', strtotime($this->review_certificate['created_at'])) : date('m'));
+					$this->certificate_dataset['today_month_name'] =  ($this->review_certificate ? $this->monthText(date('Y-m-d', strtotime($this->review_certificate['created_at']))) : $this->monthText(date('Y-m-d')));
+					$this->certificate_dataset['today_year_number'] = ($this->review_certificate ? date('Y', strtotime($this->review_certificate['created_at'])) : date('Y'));
 				}
 			}
 		}
