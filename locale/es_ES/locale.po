@@ -290,3 +290,18 @@ msgstr "treinta"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text31"
 msgstr "treinta y un"
+
+msgid "plugins.generic.exportReviewerCertificate.error.notLoggedIn"
+msgstr "Debe iniciar sesión para descargar el certificado"
+
+msgid "plugins.generic.exportReviewerCertificate.error.submissionNotSet"
+msgstr "No se ha especificado el artículo"
+
+msgid "plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded"
+msgstr "Este certificado ya ha sido descargado anteriormente. Solo se permite una descarga por revisión."
+
+msgid "plugins.generic.exportReviewerCertificate.certificate.download"
+msgstr "Descargar certificado"
+
+msgid "plugins.generic.exportReviewerCertificate.certificate.downloaded"
+msgstr "Certificado ya descargado"

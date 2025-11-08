@@ -287,3 +287,18 @@ msgstr "thirty"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text31"
 msgstr "thirty-one"
+
+msgid "plugins.generic.exportReviewerCertificate.error.notLoggedIn"
+msgstr "You must be logged in to download the certificate"
+
+msgid "plugins.generic.exportReviewerCertificate.error.submissionNotSet"
+msgstr "Submission not specified"
+
+msgid "plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded"
+msgstr "This certificate has already been downloaded. Only one download per review is allowed."
+
+msgid "plugins.generic.exportReviewerCertificate.certificate.download"
+msgstr "Download certificate"
+
+msgid "plugins.generic.exportReviewerCertificate.certificate.downloaded"
+msgstr "Certificate already downloaded"

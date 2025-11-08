@@ -94,20 +94,10 @@ op="fetchGrid" submissionId=$submission->getId() stageId=$reviewAssignment->getS
 </div>
 
 <script>
-    function showButton(){
-        $('.actions').hide();
-        let activeButton = true;
-
-        if(activeButton){
-            $('.actions').show();
-        }
-    }
-    
-    $('.actions a'),function(){
+    $('.actions a').on('click',function(){
         let href = $(this).attr('href');
         let params = "";
-        // params += "&reviewer_gender="+$('#reviewer_gender option:selected').val();
         params += "&reviewer_title="+($("#reviewer_title").val() != "" ? $("#reviewer_title").val() : "C. ");
         $(this).attr('href',href+params);
-    };
+    });
 </script>

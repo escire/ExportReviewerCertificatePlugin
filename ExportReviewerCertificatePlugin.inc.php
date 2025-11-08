@@ -18,6 +18,7 @@ use PKP\components\forms\context\ExportReviewerCertificateForm;
 
 import('lib.pkp.classes.plugins.GenericPlugin');
 import('lib.pkp.classes.file.FileManager');
+import('plugins.generic.exportReviewerCertificate.classes.ExportReviewerCertificateDAO');
 require_once(dirname(__FILE__) . '/vendor/autoload.php');
 require_once(dirname(__FILE__) . '/src/PDFLib.php');
 
@@ -267,4 +268,13 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
     
     return false;
   }
+
+
+  /**
+   * @copydoc Plugin::getInstallMigration()
+  */
+  function getInstallMigration() {
+		$this->import('ExportReviewerCertificateMigration');
+		return new ExportReviewerCertificateMigration();
+	}
 }

@@ -15,6 +15,7 @@
  */
 
 import('classes.handler.Handler');
+import('plugins.generic.exportReviewerCertificate.classes.ExportReviewerCertificateDAO');
 
 /**
  * @class ExportReviewerCertificatePdfHandler
@@ -25,7 +26,8 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	private $_request;
 	private $locale;
 	private $certificate_dataset;
-
+	private $exportReviewerCertificateDAO;
+	private $exportReviewerCertificate;
 	public function __construct()
 	{
 		// Allow just reviewer roles to download certificates
@@ -75,23 +77,46 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		$currentUser = $request->getUser();
 		$this->_request = $request;
 		$params = $request->_requestVars;
+		
+		// Inicializar el DAO
+		import('plugins.generic.exportReviewerCertificate.classes.ExportReviewerCertificateDAO');
+		$this->exportReviewerCertificateDAO = new ExportReviewerCertificateDAO();
+		
 		// Validations
 		if (!$currentUser) {
-			return new JSONMessage("Error", "User is not logged in");
+			return new JSONMessage(false, __('plugins.generic.exportReviewerCertificate.error.notLoggedIn'));
 		}
 		if (!isset($params['submission'])) {
-			return new JSONMessage("Error", "Submission not setted");
+			return new JSONMessage(false, __('plugins.generic.exportReviewerCertificate.error.submissionNotSet'));
 		}
 		
-		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "c.";
+		// Verificar si el certificado ya fue descargado anteriormente
+		$this->exportReviewerCertificate = $this->exportReviewerCertificateDAO->getByUserAndSubmission(
+			$currentUser->_data['id'], 
+			$params['submission']
+		);
+		
+		if ($this->exportReviewerCertificate) {
+			// El certificado ya fue descargado, mostrar mensaje y redirigir
+			$request->getSession()->setSessionVar('notification', __('plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded'));
+			$request->redirect(null, 'reviewer', 'submission', $params['submission']);
+			return;
+		}
+		
+		// Si no existe registro, permitir la descarga
+		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "C.";
+		
 		// Set reviewer data into certificate dataset
 		$this->reviewer();
 		// Set journal data into certificate dataset
 		$this->journal();
 		// Set submission data into certificate dataset
 		$this->submission($params['submission']);
-		// dd($this->certificate_dataset);
-		// 
+		
+		// Crear el registro ANTES de generar el PDF (para evitar múltiples descargas simultáneas)
+		$this->exportReviewerCertificateDAO->insert($currentUser->_data['id'], $params['submission']);
+		
+		// Generar y descargar el PDF
 		return (new PDFLib($this->certificate_dataset))->stream();
 	}
 
@@ -105,7 +130,7 @@ class ExportReviewerCertificatePdfHandler extends Handler
 				$locale = $this->locale;
 				$reviewer = json_decode(json_encode($reviewer->_data, JSON_UNESCAPED_UNICODE));
 				$this->certificate_dataset['reviewer_fullname'] = $reviewer->givenName->$locale . ' ' . $reviewer->familyName->$locale;
-			}
+			}                                                                       
 		}
 	}
 
@@ -153,10 +178,10 @@ class ExportReviewerCertificatePdfHandler extends Handler
 					$this->certificate_dataset['day_number'] = date('d', strtotime($publication->lastModified));
 					$this->certificate_dataset['month_name'] =  $this->monthText($publication->lastModified);
 					$this->certificate_dataset['year_number'] = date('Y', strtotime($publication->lastModified));
-					$this->certificate_dataset['today_day_number'] = date('d');
-					$this->certificate_dataset['today_month_number'] = date('m');
-					$this->certificate_dataset['today_month_name'] =  $this->monthText(date('Y-m-d'));
-					$this->certificate_dataset['today_year_number'] = date('Y');
+					$this->certificate_dataset['today_day_number'] =  ($this->exportReviewerCertificate ? date('d', strtotime($this->exportReviewerCertificate->getCreatedAt())) : date('d'));
+					$this->certificate_dataset['today_month_number'] = ($this->exportReviewerCertificate ? date('m', strtotime($this->exportReviewerCertificate->getCreatedAt())) : date('m'));
+					$this->certificate_dataset['today_month_name'] =  ($this->exportReviewerCertificate ? $this->monthText(date('Y-m-d', strtotime($this->exportReviewerCertificate->getCreatedAt()))) : $this->monthText(date('Y-m-d')));
+					$this->certificate_dataset['today_year_number'] = ($this->exportReviewerCertificate ? date('Y', strtotime($this->exportReviewerCertificate->getCreatedAt())) : date('Y'));
 				}
 			}
 		}
