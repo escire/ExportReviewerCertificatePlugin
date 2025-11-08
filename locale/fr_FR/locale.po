@@ -57,7 +57,7 @@ msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certifi
 msgstr "Contenu du certificat"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateContent.description"
-msgstr "Entrez le contenu du certificat. Dans ce champ, il est nécessaire d'ajouter des balises spéciales, qui sont répertoriées ci-dessous avec leur description :<br><ul><li>{{reviewer_gender}} : Sexe du réviseur</ li><li>{{reviewer_title }} : Titre de l'évaluateur</li><li>{{reviewer_fullname}} : Nom complet de l'évaluateur</li><li>{{reviewer_institution}} : Institution à laquelle le le critique appartient</li><li> {{publication_title}} : Titre de la publication que vous avez révisée </li></ul>En cliquant sur le bouton avobe <span class=\"fa fa-question-circle\">< /span> vous verrez un exemple de la façon d'écrire cette section."
+msgstr "Entrez le contenu du certificat. Dans ce champ, il est nécessaire d'ajouter des balises spéciales, qui sont répertoriées ci-dessous avec leur description :<br><ul><li>{{reviewer_title }} : Titre de l'évaluateur</li><li>{{reviewer_fullname}} : Nom complet de l'évaluateur</li><li> {{publication_title}} : Titre de la publication que vous avez révisée </li></ul>En cliquant sur le bouton avobe <span class=\"fa fa-question-circle\">< /span> vous verrez un exemple de la façon d'écrire cette section."
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.label"
 msgstr "Informations du journal du certificat"

@@ -44,10 +44,8 @@ class ExportReviewerCertificatePdfHandler extends Handler
 			"certificate_editor_name" => NULL,
 			"certificate_editor_institution" => NULL,
 			"certificate_editor_email" => NULL,
-			"reviewer_gender" => NULL,
 			"reviewer_title" => NULL,
 			"reviewer_fullname" => NULL,
-			"reviewer_institution" => NULL,
 			"publication_title" => NULL
 		];
 	}
@@ -84,18 +82,8 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		if (!isset($params['submission'])) {
 			return new JSONMessage("Error", "Submission not setted");
 		}
-		if (!isset($params["reviewer_gender"])) {
-			return new JSONMessage("Error", "Reviewer gender not setted");
-		}
-		// Set certificate dataset from request params data
-		if ($params["reviewer_gender"] == "male") {
-			$this->certificate_dataset["reviewer_gender"] = __("plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.male");
-		}
-		if ($params["reviewer_gender"] == "female") {
-			$this->certificate_dataset["reviewer_gender"] = __("plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.female");
-		}
+		
 		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "c.";
-		$this->certificate_dataset["reviewer_institution"] = (isset($params['reviewer_institution']) && $params['reviewer_institution'] != "" ? $params['reviewer_institution'] : __('plugins.generic.exportReviewerCertificate.pdf.independent_reviewer'));
 		// Set reviewer data into certificate dataset
 		$this->reviewer();
 		// Set journal data into certificate dataset

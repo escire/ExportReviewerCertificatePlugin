@@ -57,7 +57,7 @@ msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certifi
 msgstr "Conteúdo do certificado"
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateContent.description"
-msgstr "Insira o conteúdo do certificado. Neste campo é necessário adicionar tags especiais, que estão listadas abaixo junto com sua descrição:<br><ul><li>{{reviewer_gender}}: Gênero do revisor</ li><li>{{reviewer_title }}: Título do revisor</li><li>{{reviewer_fullname}}: Nome completo do revisor</li><li>{{reviewer_institution}}: Instituição à qual o revisor o revisor pertence</li><li> {{publication_title}}: Título da publicação que você revisou </li></ul>Clicando no botão avobe <span class=\"fa fa-question-circle\">< /span> você verá um exemplo de como escrever esta seção."
+msgstr "Insira o conteúdo do certificado. Neste campo é necessário adicionar tags especiais, que estão listadas abaixo junto com sua descrição:<br><ul><li>{{reviewer_title }}: Título do revisor</li><li>{{reviewer_fullname}}: Nome completo do revisor</li><li> {{publication_title}}: Título da publicação que você revisou </li></ul>Clicando no botão avobe <span class=\"fa fa-question-circle\">< /span> você verá um exemplo de como escrever esta seção."
 
 msgid "plugins.generic.exportReviewerCertificate.contentDocumentSettings.certificateInstitutionDescription.label"
 msgstr "Informações do diário do certificado"
