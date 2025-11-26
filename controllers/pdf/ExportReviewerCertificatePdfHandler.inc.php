@@ -17,7 +17,12 @@
 import('classes.handler.Handler');
 import('plugins.generic.exportReviewerCertificate.classes.ExportReviewerCertificateDAO');
 import('lib.pkp.classes.log.SubmissionLog');
+import('lib.pkp.classes.log.SubmissionFileLog');
 import('classes.log.SubmissionEventLogEntry');
+import('lib.pkp.classes.log.SubmissionFileEventLogEntry');
+import('lib.pkp.classes.file.FileManager');
+import('lib.pkp.classes.submission.SubmissionFile');
+
 //Constante para el evento de descarga de certificado de revisor
 define('SUBMISSION_LOG_REVIEWER_CERTIFICATE_DOWNLOAD', 0x40000020);
 
@@ -120,24 +125,39 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		// Crear el registro ANTES de generar el PDF 
 		$this->exportReviewerCertificateDAO->insert($currentUser->_data['id'], $params['submission']);
 		
-		// Registrar el evento en el log de actividad del envío
+		// Obtener el submission
 		$submissionDao = DAORegistry::getDAO('SubmissionDAO');
 		$submission = $submissionDao->getById($params['submission']);
+		
+		// Generar el PDF y obtener el contenido
+		$pdfLib = new PDFLib($this->certificate_dataset);
+		$pdfContent = $pdfLib->output();
+		
 		if ($submission) {
-			SubmissionLog::logEvent(
-				$request, 
-				$submission, 
-				SUBMISSION_LOG_REVIEWER_CERTIFICATE_DOWNLOAD, 
-				'plugins.generic.exportReviewerCertificate.log.certificateDownloaded',
-				array(
-					'reviewerName' => $currentUser->getFullName(),
-					'username' => $currentUser->getUsername()
-				)
-			);
+			// Guardar el PDF en el sistema de archivos de OJS
+			$submissionFile = $this->saveReviewerCertificatePDF($request, $submission, $currentUser, $pdfContent);
+			
+			if ($submissionFile) {
+				// Registrar solo en el log general del submission
+				SubmissionLog::logEvent(
+					$request, 
+					$submission, 
+					SUBMISSION_LOG_REVIEWER_CERTIFICATE_DOWNLOAD, 
+					'plugins.generic.exportReviewerCertificate.log.certificateDownloaded',
+					array(
+						'reviewerName' => $currentUser->getFullName(),
+						'username' => $currentUser->getUsername(),
+						'filename' => $submissionFile->getLocalizedData('name')
+					)
+				);
+			}
 		}
 		
-		// Generar y descargar el PDF
-		return (new PDFLib($this->certificate_dataset))->stream();
+		// Descargar el PDF al navegador usando el contenido ya generado
+		header('Content-Type: application/pdf');
+		header('Content-Disposition: inline; filename="' . $this->certificate_dataset['reviewer_fullname'] . '-certificate.pdf"');
+		echo $pdfContent;
+		exit;
 	}
 
 	/**
@@ -214,5 +234,76 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	{
 		$month = strtolower(date('F', strtotime($date)));
 		return __('plugins.generic.exportReviewerCertificate.pdf.month.' . $month);
+	}
+
+	/**
+	 * Guardar el PDF del certificado en el sistema de archivos de OJS
+	 * @param $request Request
+	 * @param $submission Submission
+	 * @param $reviewer User
+	 * @param $pdfContent string Contenido binario del PDF
+	 * @return SubmissionFile|null
+	 */
+	private function saveReviewerCertificatePDF($request, $submission, $reviewer, $pdfContent)
+	{
+		try {
+			// Obtener el reviewAssignment más reciente de este revisor para este envio
+			$reviewAssignmentDao = DAORegistry::getDAO('ReviewAssignmentDAO');
+			$reviewAssignments = $reviewAssignmentDao->getBySubmissionId($submission->getId());
+			
+			$reviewAssignment = null;
+			foreach ($reviewAssignments as $ra) {
+				if ($ra->getReviewerId() == $reviewer->getId() && $ra->getDateCompleted()) {
+					$reviewAssignment = $ra;
+					break;
+				}
+			}
+			
+			if (!$reviewAssignment) {
+				error_log('No se encontró reviewAssignment completado para el revisor');
+				return null;
+			}
+			
+			// Crear nombre de archivo
+			$reviewerName = str_replace(' ', '_', $reviewer->getFullName());
+			$fileName = 'certificado_revisor_' . $reviewerName . '_' . date('YmdHis') . '.pdf';
+			
+			// Guardar temporalmente el archivo
+			$fileManager = new FileManager();
+			$tempFilePath = tempnam(sys_get_temp_dir(), 'cert');
+			file_put_contents($tempFilePath, $pdfContent);
+			
+			// Obtener el directorio del envio
+			$context = $request->getContext();
+			$submissionDir = Services::get('submissionFile')->getSubmissionDir($context->getId(), $submission->getId());
+			
+			// Guardar el archivo en el sistema de archivos de OJS
+			$newFilePath = $submissionDir . '/' . uniqid() . '.pdf';
+			$fileId = Services::get('file')->add($tempFilePath, $newFilePath);
+			
+			// Limpiar archivo temporal
+			unlink($tempFilePath);
+			
+			// Crear el objeto SubmissionFile
+			$submissionFile = DAORegistry::getDAO('SubmissionFileDAO')->newDataObject();
+			$submissionFile->setData('fileId', $fileId);
+			$submissionFile->setData('fileStage', SUBMISSION_FILE_REVIEW_ATTACHMENT);
+			$submissionFile->setData('submissionId', $submission->getId());
+			$submissionFile->setData('uploaderUserId', $reviewer->getId());
+			$submissionFile->setData('assocType', ASSOC_TYPE_REVIEW_ASSIGNMENT);
+			$submissionFile->setData('assocId', $reviewAssignment->getId());
+			$submissionFile->setData('createdAt', Core::getCurrentDate());
+			$submissionFile->setData('updatedAt', Core::getCurrentDate());
+			$submissionFile->setData('name', $fileName, $this->locale);
+			
+			// Guardar en la base de datos usando el servicio
+			$submissionFile = Services::get('submissionFile')->add($submissionFile, $request);
+			
+			return $submissionFile;
+			
+		} catch (Exception $e) {
+			error_log('Error al guardar certificado de revisor: ' . $e->getMessage());
+			return null;
+		}
 	}
 }
