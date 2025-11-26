@@ -16,6 +16,10 @@
 
 import('classes.handler.Handler');
 import('plugins.generic.exportReviewerCertificate.classes.ExportReviewerCertificateDAO');
+import('lib.pkp.classes.log.SubmissionLog');
+import('classes.log.SubmissionEventLogEntry');
+//Constante para el evento de descarga de certificado de revisor
+define('SUBMISSION_LOG_REVIEWER_CERTIFICATE_DOWNLOAD', 0x40000020);
 
 /**
  * @class ExportReviewerCertificatePdfHandler
@@ -113,8 +117,24 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		// Set submission data into certificate dataset
 		$this->submission($params['submission']);
 		
-		// Crear el registro ANTES de generar el PDF (para evitar múltiples descargas simultáneas)
+		// Crear el registro ANTES de generar el PDF 
 		$this->exportReviewerCertificateDAO->insert($currentUser->_data['id'], $params['submission']);
+		
+		// Registrar el evento en el log de actividad del envío
+		$submissionDao = DAORegistry::getDAO('SubmissionDAO');
+		$submission = $submissionDao->getById($params['submission']);
+		if ($submission) {
+			SubmissionLog::logEvent(
+				$request, 
+				$submission, 
+				SUBMISSION_LOG_REVIEWER_CERTIFICATE_DOWNLOAD, 
+				'plugins.generic.exportReviewerCertificate.log.certificateDownloaded',
+				array(
+					'reviewerName' => $currentUser->getFullName(),
+					'username' => $currentUser->getUsername()
+				)
+			);
+		}
 		
 		// Generar y descargar el PDF
 		return (new PDFLib($this->certificate_dataset))->stream();

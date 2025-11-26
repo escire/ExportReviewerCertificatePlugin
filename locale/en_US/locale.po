@@ -302,3 +302,6 @@ msgstr "Download certificate"
 
 msgid "plugins.generic.exportReviewerCertificate.certificate.downloaded"
 msgstr "Certificate already downloaded"
+
+msgid "plugins.generic.exportReviewerCertificate.log.certificateDownloaded"
+msgstr "Reviewer {$reviewerName} ({$username}) has downloaded their review certificate."
