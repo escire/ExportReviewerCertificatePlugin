@@ -43,6 +43,7 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
       HookRegistry::register('APIHandler::endpoints', [$this, 'callbackSetupEndpoints']);
       HookRegistry::register('LoadHandler', [$this, 'setPageHandler']);
       HookRegistry::register('TemplateResource::getFilename', [$this, '_overridePluginTemplates']);
+      HookRegistry::register('TemplateManager::fetch', [$this, 'handleTemplateFetch']);
     }
     return $success;
   }
@@ -269,6 +270,45 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
     return false;
   }
 
+
+  /**
+   * Hook callback: Asignar variables al template reviewCompleted.tpl
+   * @param $hookName string
+   * @param $args array [$templateMgr, $template, $cache_id, $compile_id, &$result]
+   * @return bool
+   */
+  public function handleTemplateFetch($hookName, $args) {
+    $templateMgr = $args[0];
+    $template = $args[1];
+    
+    // Solo interceptar el template reviewCompleted.tpl
+    if (strpos($template, 'reviewCompleted.tpl') !== false) {
+      $request = Application::get()->getRequest();
+      $user = $request->getUser();
+      
+      // Submission desde las variables del template
+      $submission = $templateMgr->getTemplateVars('submission');
+      
+      if ($user && $submission) {
+        // Verificar si el certificado ya fue descargado
+        $this->import('classes.ExportReviewerCertificateDAO');
+        $exportReviewerCertificateDAO = new ExportReviewerCertificateDAO();
+        $certificate = $exportReviewerCertificateDAO->getByUserAndSubmission(
+          $user->getId(), 
+          $submission->getId()
+        );
+        
+        // Asignar el estado al template
+        $templateMgr->assign([
+          'certificateDownloaded' => !is_null($certificate),
+          'certificateDownloadDate' => $certificate ? $certificate->getCreatedAt() : null
+        ]);
+      }
+    }
+    
+    // No interceptar el resultado, solo modificar las variables
+    return false;
+  }
 
   /**
    * @copydoc Plugin::getInstallMigration()
