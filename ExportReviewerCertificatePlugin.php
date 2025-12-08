@@ -16,9 +16,11 @@
 
 namespace APP\plugins\generic\exportReviewerCertificate;
 
+use APP\core\Application;
 use APP\file\PublicFileManager;
 use APP\i18n\AppLocale;
 use APP\plugins\generic\exportReviewerCertificate\controllers\tab\ExportReviewerCertificateSettingsTabFormHandler;
+use APP\plugins\generic\exportReviewerCertificate\repositories\ReviewerCertificateRepository;
 use PKP\components\forms\context\ExportReviewerCertificateForm;
 use PKP\core\Registry;
 use PKP\plugins\GenericPlugin;
@@ -58,6 +60,7 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
       Hook::add('APIHandler::endpoints', [$this, 'callbackSetupEndpoints']);
       Hook::add('LoadHandler', [$this, 'setPageHandler']);
       Hook::add('TemplateResource::getFilename', [$this, '_overridePluginTemplates']);
+      Hook::add('TemplateManager::fetch', [$this, 'handleTemplateFetch']);
     }
 
     return $success;
@@ -253,6 +256,39 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
+
+    return false;
+  }
+
+  /**
+   * Hook callback: Assign variables to reviewCompleted.tpl template
+   * @param string $hookName
+   * @param array $args [$templateMgr, $template, $cache_id, $compile_id, &$result]
+   * @return bool
+   */
+  public function handleTemplateFetch($hookName, $args)
+  {
+    $templateMgr = $args[0];
+    $template = $args[1];
+
+    if (strpos($template, 'reviewCompleted.tpl') !== false) {
+      $request = Application::get()->getRequest();
+      $user = $request->getUser();
+      $submission = $templateMgr->getTemplateVars('submission');
+
+      if ($user && $submission) {
+        $repository = new ReviewerCertificateRepository();
+        $certificate = $repository->getReviewerCertificate(
+          $user->getId(),
+          $submission->getId()
+        );
+
+        $templateMgr->assign([
+          'certificateDownloaded' => !is_null($certificate),
+          'certificateDownloadDate' => $certificate ? $certificate['created_at'] : null
+        ]);
+      }
+    }
 
     return false;
   }

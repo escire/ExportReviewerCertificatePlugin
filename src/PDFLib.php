@@ -64,6 +64,17 @@ class PDFLib
     }
 
     /**
+     * Output pdf content as string
+     * @return string PDF content
+     */
+    public function output(): string
+    {
+        $this->setHtmlString();
+        $this->pdf->render();
+        return $this->pdf->output();
+    }
+
+    /**
      * Create PDF Handler
      */
     private function createPDFHandler(): self

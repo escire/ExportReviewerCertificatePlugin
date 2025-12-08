@@ -287,3 +287,27 @@ msgstr "thirty"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text31"
 msgstr "thirty-one"
+
+# Certificate downloaded messages
+msgid "plugins.generic.exportReviewerCertificate.certificate.download"
+msgstr "Certificate downloaded"
+
+msgid "plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded"
+msgstr "You have already downloaded your reviewer certificate for this article. Only one download is allowed per completed review."
+
+msgid "plugins.generic.exportReviewerCertificate.certificate.downloadDate"
+msgstr "Download date: {$date}"
+
+# Log messages
+msgid "plugins.generic.exportReviewerCertificate.log.certificateUploaded"
+msgstr "Review file \"{$filename}\" uploaded as file {$fileId}."
+
+msgid "plugins.generic.exportReviewerCertificate.log.certificateDownloaded"
+msgstr "Reviewer {$reviewerName} ({$username}) downloaded their review certificate. File: {$filename}"
+
+# Error messages
+msgid "plugins.generic.exportReviewerCertificate.error.notLoggedIn"
+msgstr "You must be logged in to download the certificate."
+
+msgid "plugins.generic.exportReviewerCertificate.error.submissionNotSet"
+msgstr "No submission specified to download the certificate."

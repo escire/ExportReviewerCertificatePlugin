@@ -16,7 +16,7 @@ This is a OJS 3.4 plugin that allows reviewers to download evaluation completion
 ## Prerequisites
 
 - Open Journal Systems - OJS 3.4 [🌐 Information/Download link](https://pkp.sfu.ca/software/ojs/download/archive/) 
-- PHP 7.4|8+ 
+- PHP 8.0|8+ 
 - PHP GD extension 
 - Linux server is preferred
 
@@ -30,9 +30,9 @@ If you have server access, you can clone this repo into <ojs_root_dir>/plugins/g
 ```
 cd /<ojs_root_dir>/plugins/generic
 ```
-2. Clone this repo using **ojs34_export_reviewer_certificate_plugin** branch from plugin´s [github repository](https://github.com/epsomsegura/exportReviewerCertificate)
+2. Clone this repo using **ojs34_export_reviewer_certificate_plugin** branch from plugin´s [github repository](https://github.com/escire/ExportReviewerCertificatePlugin)
 ```
-git clone --branch ojs34_export_reviewer_certificate_plugin --single-branch https://github.com/epsomsegura/exportReviewerCertificate.git
+git clone --branch ojs34_export_reviewer_certificate_plugin --single-branch https://github.com/escire/ExportReviewerCertificatePlugin
 ```
 3. That´s all, now you can enable and configure the plugin to each journal
 

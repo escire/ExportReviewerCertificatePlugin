@@ -126,15 +126,11 @@ class ExportReviewerCertificateSettingsTabFormHandler extends SettingsHandler
 	{
 		import('classes.file.PublicFileManager');
 		$publicFileManager = new PublicFileManager();
-//		error_log( print_r('*********Base Path**********', TRUE) );
 		$basePath = $this->request->getBasePath();
-		error_log( print_r($basePath, TRUE) );
-//		error_log( print_r('*********Get Path**********', TRUE) );
-                //error_log( print_r( __DIR__)[0] . $this->request->getBasePath() . '/public/journals/' . $this->context->getId() . '/' . $fileName, TRUE) );
+		
 		if (!empty($this->context->getId()) && !empty($basePath)) {
 			$filePath = explode($this->request->getBasePath(), __DIR__)[0] . $this->request->getBasePath() . '/public/journals/' . $this->context->getId() . '/' . $fileName;
 			$publicFileManager->deleteByPath($filePath);
 		}
-		//$publicFileManager->deleteByPath($filePath);
 	}
  }

@@ -290,3 +290,27 @@ msgstr "treinta"
 
 msgid "plugins.generic.exportReviewerCertificate.pdf.day.text31"
 msgstr "treinta y un"
+
+# Mensajes de certificado descargado
+msgid "plugins.generic.exportReviewerCertificate.certificate.download"
+msgstr "Certificado descargado"
+
+msgid "plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded"
+msgstr "Ya has descargado tu certificado de revisor para este artículo. Solo se permite una descarga por revisión completada."
+
+msgid "plugins.generic.exportReviewerCertificate.certificate.downloadDate"
+msgstr "Fecha de descarga: {$date}"
+
+# Mensajes de log
+msgid "plugins.generic.exportReviewerCertificate.log.certificateUploaded"
+msgstr "Se cargó la revisión \"{$filename}\" del archivo {$fileId}."
+
+msgid "plugins.generic.exportReviewerCertificate.log.certificateDownloaded"
+msgstr "El revisor {$reviewerName} ({$username}) descargó su certificado de revisión. Archivo: {$filename}"
+
+# Mensajes de error
+msgid "plugins.generic.exportReviewerCertificate.error.notLoggedIn"
+msgstr "Debe iniciar sesión para descargar el certificado."
+
+msgid "plugins.generic.exportReviewerCertificate.error.submissionNotSet"
+msgstr "No se ha especificado el envío para descargar el certificado."
