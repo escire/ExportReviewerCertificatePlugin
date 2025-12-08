@@ -21,9 +21,6 @@ use APP\file\PublicFileManager;
 use APP\pages\management\SettingsHandler;
 use PKP\db\DAORegistry;
 
-import('pages/management/SettingsHandler');
-import('lib.pkp.classes.validation.ValidatorFactory');
-
 /**
  * @class ExportReviewerCertificateSettingsTabFormHandler
  * @brief Class implemeting the export reviewer certificate settings tab form handler.
@@ -74,7 +71,6 @@ class ExportReviewerCertificateSettingsTabFormHandler extends SettingsHandler
 	 */
 	private function uploadImage($paramKey, $keyName): ?string
 	{
-		import('classes.file.PublicFileManager');
 		$publicFileManager = new PublicFileManager();
 		$fileProperties = ["name" => NULL, "uploadName" => NULL, "altText" => NULL];
 		// Check if context has value and params is null
@@ -124,17 +120,12 @@ class ExportReviewerCertificateSettingsTabFormHandler extends SettingsHandler
 	 */
 	private function deleteExistingFile($fileName): void
 	{
-		import('classes.file.PublicFileManager');
 		$publicFileManager = new PublicFileManager();
-//		error_log( print_r('*********Base Path**********', TRUE) );
 		$basePath = $this->request->getBasePath();
-		error_log( print_r($basePath, TRUE) );
-//		error_log( print_r('*********Get Path**********', TRUE) );
-                //error_log( print_r( __DIR__)[0] . $this->request->getBasePath() . '/public/journals/' . $this->context->getId() . '/' . $fileName, TRUE) );
+		
 		if (!empty($this->context->getId()) && !empty($basePath)) {
 			$filePath = explode($this->request->getBasePath(), __DIR__)[0] . $this->request->getBasePath() . '/public/journals/' . $this->context->getId() . '/' . $fileName;
 			$publicFileManager->deleteByPath($filePath);
 		}
-		//$publicFileManager->deleteByPath($filePath);
 	}
  }

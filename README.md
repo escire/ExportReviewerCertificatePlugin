@@ -1,6 +1,6 @@
 # Export Reviewer Certificate Plugin for OJS
 
-This is a OJS 3.4 plugin that allows reviewers to download evaluation completion certificate per reviewed article.
+This is a OJS 3.5 plugin that allows reviewers to download evaluation completion certificate per reviewed article.
 
 ## Table of content
 - [Prerequisites](#prerequisites)
@@ -15,8 +15,8 @@ This is a OJS 3.4 plugin that allows reviewers to download evaluation completion
 
 ## Prerequisites
 
-- Open Journal Systems - OJS 3.4 [🌐 Information/Download link](https://pkp.sfu.ca/software/ojs/download/archive/) 
-- PHP 7.4|8+ 
+- Open Journal Systems - OJS 3.5 [🌐 Information/Download link](https://pkp.sfu.ca/software/ojs/download/archive/) 
+- PHP 8.0+ 
 - PHP GD extension 
 - Linux server is preferred
 
@@ -30,15 +30,25 @@ If you have server access, you can clone this repo into <ojs_root_dir>/plugins/g
 ```
 cd /<ojs_root_dir>/plugins/generic
 ```
-2. Clone this repo using **ojs34_export_reviewer_certificate_plugin** branch from plugin´s [github repository](https://github.com/epsomsegura/exportReviewerCertificate)
+2. Clone this repo using **ojs35_export_reviewer_certificate_plugin** branch from plugin´s [github repository](https://github.com/escire/ExportReviewerCertificatePlugin)
 ```
-git clone --branch ojs34_export_reviewer_certificate_plugin --single-branch https://github.com/epsomsegura/exportReviewerCertificate.git
+git clone --branch ojs35_export_reviewer_certificate_plugin --single-branch https://github.com/escire/ExportReviewerCertificatePlugin
 ```
-3. That´s all, now you can enable and configure the plugin to each journal
+3. Create the API endpoint by copying or linking the plugin's API to the main API directory:
+```
+cd /<ojs_root_dir>
+ln -s plugins/generic/exportReviewerCertificate/api/v1 api/v1/exportReviewerCertificate
+```
+4. Run the migration to create the database table:
+```
+php tools/upgrade.php upgrade
+php lib/pkp/tools/installPluginVersion.php plugins/generic/exportReviewerCertificate/version.xml
+```
+5. That´s all, now you can enable and configure the plugin to each journal
 
 ### Using tar.gz file
-1. Download OJS 3.4 plugin version using tar.gz compressed mode [🌐 Download link](https://github.com/escire-ojs-plugins/exportReviewerCertificate/archive/refs/tags/V2.0.0.1.tar.gz)
-2. Login into OJS 3.4 and go to journal website settings.
+1. Download OJS 3.5 plugin version using tar.gz compressed mode [🌐 Download link](https://github.com/escire-ojs-plugins/exportReviewerCertificate/archive/refs/tags/V2.0.0.1.tar.gz)
+2. Login into OJS 3.5 and go to journal website settings.
 3. Open Plugin modules tab and import tar.gz plugin
 4. That´s all, now you can enable and configure the plugin to each journal
 
@@ -89,9 +99,10 @@ Follow the steps into main form and run.
 
 ## Possible problems
 
-- If plugin not working execute this on root project
+- If plugin not working, make sure the API endpoint is created and the database migration has been executed on root project:
 
 ```
+ln -s plugins/generic/exportReviewerCertificate/api/v1 api/v1/exportReviewerCertificate
 php tools/upgrade.php upgrade
 php lib/pkp/tools/installPluginVersion.php plugins/generic/exportReviewerCertificate/version.xml
 ```

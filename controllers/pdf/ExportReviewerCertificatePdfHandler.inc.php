@@ -14,16 +14,29 @@
  * @github: https://github.com/escire-ojs-plugins/exportReviewerCertificate
  */
 
+namespace APP\plugins\generic\exportReviewerCertificate\controllers\pdf;
+
 use APP\core\Application;
 use APP\facades\Repo;
 use APP\handler\Handler;
-use APP\i18n\AppLocale;
 use APP\plugins\generic\exportReviewerCertificate\PDFLib;
-use PKP\core\JSONMessage;
-use PKP\security\authorization\PolicySet;
-use PKP\security\Role;
-use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
 use APP\plugins\generic\exportReviewerCertificate\repositories\ReviewerCertificateRepository;
+use PKP\core\Core;
+use PKP\core\JSONMessage;
+use PKP\core\PKPApplication;
+use PKP\db\DAORegistry;
+use PKP\facades\Locale;
+use PKP\file\FileManager;
+use PKP\log\event\PKPSubmissionEventLogEntry;
+use PKP\log\event\SubmissionFileEventLogEntry;
+use PKP\security\authorization\PolicySet;
+use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
+use PKP\security\Role;
+use PKP\services\PKPFileService;
+use PKP\submissionFile\SubmissionFile;
+
+// Constante para el evento de descarga de certificado de revisor
+define('SUBMISSION_LOG_REVIEWER_CERTIFICATE_DOWNLOAD', 0x40000020);
 
 /**
  * @class ExportReviewerCertificatePdfHandler
@@ -42,7 +55,7 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		$this->reviewCertificateRepository = new ReviewerCertificateRepository();
 		$this->addRoleAssignment([Role::ROLE_ID_REVIEWER], ['reviewer', 'download']);
 		// Set global variables
-		$this->locale = AppLocale::getLocale();
+		$this->locale = Locale::getLocale();
 		$this->certificate_dataset = [
 			"certificate_watermark" => NULL,
 			"certificate_header" => NULL,
@@ -66,10 +79,8 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	 */
 	public function authorize($request, &$args, $roleAssignments)
 	{
-		import('lib.pkp.classes.security.authorization.PolicySet');
 		$rolePolicy = new PolicySet(COMBINING_PERMIT_OVERRIDES);
 
-		import('lib.pkp.classes.security.authorization.RoleBasedHandlerOperationPolicy');
 		foreach ($roleAssignments as $role => $operations) {
 			$rolePolicy->addPolicy(new RoleBasedHandlerOperationPolicy($request, $role, $operations));
 		}
@@ -86,29 +97,83 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		$currentUser = $request->getUser();
 		$this->_request = $request;
 		$params = $request->_requestVars;
+		
 		// Validations
 		if (!$currentUser) {
-			return new JSONMessage("Error", "User is not logged in");
+			return new JSONMessage(false, __('plugins.generic.exportReviewerCertificate.error.notLoggedIn'));
 		}
 		if (!isset($params['submission'])) {
-			return new JSONMessage("Error", "Submission not setted");
+			return new JSONMessage(false, __('plugins.generic.exportReviewerCertificate.error.submissionNotSet'));
 		}
-		$this->review_certificate = $this->reviewCertificateRepository->getReviewerCertificate($currentUser->_data['id'], $params['submission']);
-
-		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "c.";
-		// Set reviewer data into certificate dataset
+		
+		// Check if certificate has already been downloaded
+		$this->review_certificate = $this->reviewCertificateRepository->getReviewerCertificate(
+			$currentUser->_data['id'], 
+			$params['submission']
+		);
+		
+		if ($this->review_certificate) {
+			$request->getSession()->flash(
+				'notification', 
+				__('plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded')
+			);
+			$request->redirect(null, 'reviewer', 'submission', [$params['submission']]);
+			return;
+		}
+		
+		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "C.";
+		
 		$this->reviewer();
-		// Set journal data into certificate dataset
 		$this->journal();
-		// Set submission data into certificate dataset
 		$this->submission($params['submission']);
-
-		if (!$this->review_certificate) {
-			$this->reviewCertificateRepository->registerReviewerCertificate($currentUser->_data['id'], $params['submission']);
+		
+		// Register certificate download before generating PDF
+		$this->reviewCertificateRepository->registerReviewerCertificate($currentUser->_data['id'], $params['submission']);
+		
+		// Obtener el submission
+		$submission = Repo::submission()->get($params['submission']);
+		
+		// Generar el PDF y obtener el contenido
+		require_once(dirname(__FILE__) . '/../../src/PDFLib.php');
+		$pdfLib = new PDFLib($this->certificate_dataset);
+		$pdfContent = $pdfLib->output();
+		
+		// Save file and register in activity log
+		if ($submission) {
+			$submissionFile = $this->saveReviewerCertificatePDF($request, $submission, $currentUser, $pdfContent);
+			
+			if ($submissionFile) {
+				$reviewerName = str_replace(' ', '_', $currentUser->getFullName());
+				$fileName = 'certificado_revisor_' . $reviewerName . '_' . date('YmdHis') . '.pdf';
+				
+				// Crear el event log
+				$eventLog = Repo::eventLog()->newDataObject();
+				$eventLog->setData('assocType', PKPApplication::ASSOC_TYPE_SUBMISSION);
+				$eventLog->setData('assocId', $submission->getId());
+				$eventLog->setData('eventType', SUBMISSION_LOG_REVIEWER_CERTIFICATE_DOWNLOAD);
+				$eventLog->setData('userId', $currentUser->getId());
+				$eventLog->setData('message', 'plugins.generic.exportReviewerCertificate.log.certificateDownloaded');
+				$eventLog->setData('isTranslate', false);
+				$eventLog->setData('dateLogged', Core::getCurrentDate());
+				
+				// Agregar parámetros adicionales
+				$eventLog->setData('reviewerName', $currentUser->getFullName());
+				$eventLog->setData('username', $currentUser->getUsername());
+				$eventLog->setData('filename', $fileName);
+				
+				$eventLogId = Repo::eventLog()->add($eventLog);
+				
+				error_log('ExportReviewerCertificate: Event log created with ID ' . $eventLogId);
+			} else {
+				error_log('ExportReviewerCertificate: Failed to save submission file, no event log created');
+			}
 		}
-
-		import('plugins.generic.exportReviewerCertificate.src.PDFLib');
-		return (new PDFLib($this->certificate_dataset))->stream();
+		
+		// Download PDF to browser
+		header('Content-Type: application/pdf');
+		header('Content-Disposition: inline; filename="' . $this->certificate_dataset['reviewer_fullname'] . '-certificate.pdf"');
+		echo $pdfContent;
+		exit;
 	}
 
 	/**
@@ -185,5 +250,76 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	{
 		$month = strtolower(date('F', strtotime($date)));
 		return __('plugins.generic.exportReviewerCertificate.pdf.month.' . $month);
+	}
+
+	/**
+	 * Save reviewer certificate PDF to OJS file system
+	 * @param $request Request
+	 * @param $submission Submission
+	 * @param $reviewer User
+	 * @param $pdfContent string Binary PDF content
+	 * @return SubmissionFile|null
+	 */
+	private function saveReviewerCertificatePDF($request, $submission, $reviewer, $pdfContent)
+	{
+		try {
+			// Usar el repositorio en lugar del DAO
+			$reviewAssignments = Repo::reviewAssignment()
+				->getCollector()
+				->filterBySubmissionIds([$submission->getId()])
+				->filterByReviewerIds([$reviewer->getId()])
+				->filterByCompleted(true)
+				->getMany();
+			
+			$reviewAssignment = null;
+			foreach ($reviewAssignments as $ra) {
+				if ($ra->getData('dateCompleted')) {
+					$reviewAssignment = $ra;
+					break;
+				}
+			}
+			
+			if (!$reviewAssignment) {
+				error_log('ExportReviewerCertificate: No completed review assignment found for reviewer ' . $reviewer->getId());
+				return null;
+			}
+			
+			$reviewerName = str_replace(' ', '_', $reviewer->getFullName());
+			$fileName = 'certificado_revisor_' . $reviewerName . '_' . date('YmdHis') . '.pdf';
+			
+			$tempFilePath = tempnam(sys_get_temp_dir(), 'cert');
+			file_put_contents($tempFilePath, $pdfContent);
+			
+			$context = $request->getContext();
+			$submissionDir = 'contexts/' . $context->getId() . '/submissions/' . $submission->getId() . '/';
+			$relativePath = $submissionDir . uniqid() . '.pdf';
+			
+			$fileService = app(PKPFileService::class);
+			$fileId = $fileService->add($tempFilePath, $relativePath);
+			
+			unlink($tempFilePath);
+			
+			// Crear el objeto SubmissionFile
+			$submissionFile = Repo::submissionFile()->newDataObject();
+			$submissionFile->setData('fileId', $fileId);
+			$submissionFile->setData('fileStage', SubmissionFile::SUBMISSION_FILE_REVIEW_ATTACHMENT);
+			$submissionFile->setData('submissionId', $submission->getId());
+			$submissionFile->setData('uploaderUserId', $reviewer->getId());
+			$submissionFile->setData('assocType', PKPApplication::ASSOC_TYPE_REVIEW_ASSIGNMENT);
+			$submissionFile->setData('assocId', $reviewAssignment->getId());
+			$submissionFile->setData('name', $fileName, Locale::getLocale());
+			$submissionFile->setData('createdAt', Core::getCurrentDate());
+			$submissionFile->setData('updatedAt', Core::getCurrentDate());
+			
+			$submissionFileId = Repo::submissionFile()->add($submissionFile);
+			
+			error_log('ExportReviewerCertificate: File saved successfully with ID ' . $submissionFileId);
+			
+			return Repo::submissionFile()->get($submissionFileId);
+			
+		} catch (\Exception $e) {
+			error_log('ExportReviewerCertificate: Error saving PDF - ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+			return null;
+		}
 	}
 }

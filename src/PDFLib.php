@@ -64,6 +64,17 @@ class PDFLib
     }
 
     /**
+     * Output pdf content as string
+     * @return string PDF content
+     */
+    public function output(): string
+    {
+        $this->setHtmlString();
+        $this->pdf->render();
+        return $this->pdf->output();
+    }
+
+    /**
      * Create PDF Handler
      */
     private function createPDFHandler(): self
@@ -96,7 +107,7 @@ class PDFLib
                     z-index: 2;
                 }
                 div.certificate--content p {
-                    font-family: \'Times New Roman\', Times, serif; font-style: 12px; font-style: italic; text-align: justify;
+                    font-family: \'Times New Roman\', Times, serif; font-style: 12px; text-align: justify;
                 }
                 div.certificate--content p:first-of-type {
                     font-size: 20px !important; font-style: normal !important; text-align: center !important; font-weight: lighter !important;

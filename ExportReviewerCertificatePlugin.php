@@ -16,11 +16,13 @@
 
 namespace APP\plugins\generic\exportReviewerCertificate;
 
+use APP\core\Application;
 use APP\file\PublicFileManager;
-use APP\i18n\AppLocale;
 use APP\plugins\generic\exportReviewerCertificate\controllers\tab\ExportReviewerCertificateSettingsTabFormHandler;
-use PKP\components\forms\context\ExportReviewerCertificateForm;
+use APP\plugins\generic\exportReviewerCertificate\repositories\ReviewerCertificateRepository;
+use PKP\core\Core;
 use PKP\core\Registry;
+use PKP\facades\Locale;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
 
@@ -53,27 +55,37 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
     $success = parent::register($category, $path);
 
     if ($success && $this->getEnabled()) {
+      // Instalar el endpoint de API si no existe
+      $this->installApiEndpoint();
+      
       Hook::add('Schema::get::context', [$this, 'addToSchema']);
       Hook::add('Template::Settings::website::setup', [$this, 'callbackAppearanceTab']);
-      Hook::add('APIHandler::endpoints', [$this, 'callbackSetupEndpoints']);
       Hook::add('LoadHandler', [$this, 'setPageHandler']);
       Hook::add('TemplateResource::getFilename', [$this, '_overridePluginTemplates']);
+      Hook::add('TemplateManager::fetch', [$this, 'handleTemplateFetch']);
     }
 
     return $success;
   }
 
-  function callbackSetupEndpoints($hook, $args)
+  /**
+   * Instalar el endpoint de API en la estructura de OJS
+   */
+  private function installApiEndpoint(): void
   {
-    $endpoints = &$args[0];
-    import('plugins.generic.exportReviewerCertificate.controllers.tab.ExportReviewerCertificateSettingsTabFormHandler');
-    $handler = new ExportReviewerCertificateSettingsTabFormHandler();
-    $endpoints['PUT'][] =
-      [
-        'pattern' => '/{contextPath}/api/{version}/contexts/{contextId}/exportReviewerCertificateSettings',
-        'handler' => [$handler, 'saveFormData'],
-        'roles' => array(ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER)
-      ];
+    $apiDir = Core::getBaseDir() . '/api/v1/_exportReviewerCertificateSettings';
+    $apiIndexFile = $apiDir . '/index.php';
+    
+    // Crear directorio si no existe
+    if (!file_exists($apiDir)) {
+      mkdir($apiDir, 0755, true);
+    }
+    
+    // Copiar el archivo index.php si no existe o está desactualizado
+    $sourceFile = $this->getPluginPath() . '/api/v1/index.php';
+    if (file_exists($sourceFile) && (!file_exists($apiIndexFile) || filemtime($sourceFile) > filemtime($apiIndexFile))) {
+      copy($sourceFile, $apiIndexFile);
+    }
   }
 
   public function callbackAppearanceTab($hookName, $args)
@@ -84,15 +96,18 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
     $context = $request->getContext();
     $dispatcher = $request->getDispatcher();
     $supportedFormLocales = $context->getSupportedFormLocales();
-    $localeNames = AppLocale::getAllLocales();
-    $locales = array_map(function ($localeKey) use ($localeNames) {
-      return ['key' => $localeKey, 'label' => $localeNames[$localeKey]];
+    $locales = array_map(function ($localeKey) {
+      $localeMetadata = Locale::getMetadata($localeKey);
+      return ['key' => $localeKey, 'label' => $localeMetadata->getDisplayName()];
     }, $supportedFormLocales);
-    $contextApiUrl = $dispatcher->url($request, ROUTE_API, $context->getPath(), 'contexts/' . $context->getId() . "/exportReviewerCertificateSettings");
+    $contextApiUrl = $dispatcher->url($request, ROUTE_API, $context->getPath(), '_exportReviewerCertificateSettings');
     $publicFileManager = new PublicFileManager();
     $baseUrl = $request->getBaseUrl() . '/' . $publicFileManager->getContextFilesPath($context->getId());
     $temporaryFileApiUrl = $dispatcher->url($request, ROUTE_API, $context->getPath(), 'temporaryFiles');
-    $this->import('classes.components.form.context.ExportReviewerCertificateForm');
+    
+    // Load the form class
+    require_once($this->getPluginPath() . '/classes/components/form/context/ExportReviewerCertificateForm.inc.php');
+    
     $ExportReviewerCertificateForm = new ExportReviewerCertificateForm(
       $contextApiUrl,
       $locales,
@@ -120,9 +135,13 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
 
   public function setPageHandler($hookName, $params)
   {
-    if ($params[0] === "reviewer" && $params[1] === "download") {
-      $this->import('controllers.pdf.ExportReviewerCertificatePdfHandler');
-      define('HANDLER_CLASS', 'ExportReviewerCertificatePdfHandler');
+    $page = &$params[0];
+    $op = &$params[1];
+    $handler = &$params[3];
+    
+    if ($page === "reviewer" && $op === "download") {
+      require_once($this->getPluginPath() . '/controllers/pdf/ExportReviewerCertificatePdfHandler.inc.php');
+      $handler = new \APP\plugins\generic\exportReviewerCertificate\controllers\pdf\ExportReviewerCertificatePdfHandler();
       return true;
     }
     return false;
@@ -253,6 +272,39 @@ class ExportReviewerCertificatePlugin extends GenericPlugin
       'apiSummary' => true,
       'validation' => ['nullable']
     ];
+
+    return false;
+  }
+
+  /**
+   * Hook callback: Assign variables to reviewCompleted.tpl template
+   * @param string $hookName
+   * @param array $args [$templateMgr, $template, $cache_id, $compile_id, &$result]
+   * @return bool
+   */
+  public function handleTemplateFetch($hookName, $args)
+  {
+    $templateMgr = $args[0];
+    $template = $args[1];
+
+    if (strpos($template, 'reviewCompleted.tpl') !== false) {
+      $request = Application::get()->getRequest();
+      $user = $request->getUser();
+      $submission = $templateMgr->getTemplateVars('submission');
+
+      if ($user && $submission) {
+        $repository = new ReviewerCertificateRepository();
+        $certificate = $repository->getReviewerCertificate(
+          $user->getId(),
+          $submission->getId()
+        );
+
+        $templateMgr->assign([
+          'certificateDownloaded' => !is_null($certificate),
+          'certificateDownloadDate' => $certificate ? $certificate['created_at'] : null
+        ]);
+      }
+    }
 
     return false;
   }

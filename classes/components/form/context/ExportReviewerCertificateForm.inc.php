@@ -14,7 +14,7 @@
  * @github: https://github.com/escire-ojs-plugins/exportReviewerCertificate
  */
 
-namespace PKP\components\forms\context;
+namespace APP\plugins\generic\exportReviewerCertificate;
 
 use PKP\components\forms\FieldRichTextarea;
 use PKP\components\forms\FormComponent;
