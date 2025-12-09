@@ -76,36 +76,45 @@ op="fetchGrid" submissionId=$submission->getId() stageId=$reviewAssignment->getS
 <div class="export-certificate-form-container">
     <div class="instructions">{translate key="plugins.generic.exportReviewerCertificate.reviewer.instruction"}</div>
     <div class="separator"></div>
-    <div class="column">
-        <div class="form-group">
-            <label>{translate key="plugins.generic.exportReviewerCertificate.reviewer.title_label"}</label>
-            <input type="text" id="reviewer_title" placeholder="C | Dr | Dra | LI | MC | MRT" />
+    
+    {if $certificateDownloaded}
+        <div class="pkp_notification" style="margin: 10px 0; padding: 10px; background: #f5f5f5; border-left: 4px solid #22d322;">
+            <strong>{translate key="plugins.generic.exportReviewerCertificate.certificate.download"}</strong>
+            <p style="margin: 5px 0 0 0;">{translate key="plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded"}</p>
+            {if $certificateDownloadDate}
+                <p style="margin: 5px 0 0 0; font-size: 0.9em; color: #666;">
+                    {translate key="plugins.generic.exportReviewerCertificate.certificate.downloadDate" date=$certificateDownloadDate}
+                </p>
+            {/if}
+        </div>
+    {else}
+        <div class="column">
+            <div class="form-group">
+                <label>{translate key="plugins.generic.exportReviewerCertificate.reviewer.title_label"}</label>
+                <input type="text" id="reviewer_title" placeholder="C | Dr | Dra | LI | MC | MRT" />
+            </div>
+        </div>
+    {/if}
+</div>
+
+{if !$certificateDownloaded}
+    <div class="pkp_controllers_grid ">
+        <div class="actions">
+            <a href="{url page="reviewer" op="download" submission=$submission->getId()}"
+                target="_BLANK"
+                title="{translate key="plugins.generic.exportReviewerCertificate.reviewer.button_title"}">{translate
+                key="plugins.generic.exportReviewerCertificate.reviewer.button_label"}</a>
         </div>
     </div>
-</div>
+{/if}
 
-<div class="pkp_controllers_grid ">
-    <div class="actions">
-        <a href="{url page=" reviewer" op="download" submission=$submission->getId()}"
-            target="_BLANK"
-            title="{translate key="plugins.generic.exportReviewerCertificate.reviewer.button_title" }">{translate
-            key="plugins.generic.exportReviewerCertificate.reviewer.button_label"}</a>
-    </div>
-</div>
-
+{if !$certificateDownloaded}
 <script>
-    function showButton(){
-        $('.actions').hide();
-        let activeButton = true;
-        if(activeButton){
-            $('.actions').show();
-        }
-    }
     $('.actions a').on('click',function(){
         let href = $(this).attr('href');
         let params = "";
-        // params += "&reviewer_gender="+$('#reviewer_gender option:selected').val();
         params += "&reviewer_title="+($("#reviewer_title").val() != "" ? $("#reviewer_title").val() : "C. ");
         $(this).attr('href',href+params);
     });
 </script>
+{/if}

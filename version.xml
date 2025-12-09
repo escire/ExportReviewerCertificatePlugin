@@ -2,7 +2,7 @@
 <version>
   <application>exportReviewerCertificate</application>
   <type>plugins.generic</type>
-  <release>1.1.5.2</release>
+  <release>1.1.6.0</release>
   <date>2025-01-16</date>
   <lazy-load>1</lazy-load>
   <site-wide>0</site-wide>

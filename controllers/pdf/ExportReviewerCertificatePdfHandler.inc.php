@@ -19,11 +19,22 @@ use APP\facades\Repo;
 use APP\handler\Handler;
 use APP\i18n\AppLocale;
 use APP\plugins\generic\exportReviewerCertificate\PDFLib;
-use PKP\core\JSONMessage;
-use PKP\security\authorization\PolicySet;
-use PKP\security\Role;
-use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
 use APP\plugins\generic\exportReviewerCertificate\repositories\ReviewerCertificateRepository;
+use PKP\core\Core;
+use PKP\core\JSONMessage;
+use PKP\core\PKPApplication;
+use PKP\db\DAORegistry;
+use PKP\file\FileManager;
+use PKP\log\event\PKPSubmissionEventLogEntry;
+use PKP\log\event\SubmissionFileEventLogEntry;
+use PKP\security\authorization\PolicySet;
+use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
+use PKP\security\Role;
+use PKP\services\PKPFileService;
+use PKP\submissionFile\SubmissionFile;
+
+// Constante para el evento de descarga de certificado de revisor
+define('SUBMISSION_LOG_REVIEWER_CERTIFICATE_DOWNLOAD', 0x40000020);
 
 /**
  * @class ExportReviewerCertificatePdfHandler
@@ -86,29 +97,76 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		$currentUser = $request->getUser();
 		$this->_request = $request;
 		$params = $request->_requestVars;
+		
 		// Validations
 		if (!$currentUser) {
-			return new JSONMessage("Error", "User is not logged in");
+			return new JSONMessage(false, __('plugins.generic.exportReviewerCertificate.error.notLoggedIn'));
 		}
 		if (!isset($params['submission'])) {
-			return new JSONMessage("Error", "Submission not setted");
+			return new JSONMessage(false, __('plugins.generic.exportReviewerCertificate.error.submissionNotSet'));
 		}
-		$this->review_certificate = $this->reviewCertificateRepository->getReviewerCertificate($currentUser->_data['id'], $params['submission']);
-
-		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "c.";
-		// Set reviewer data into certificate dataset
+		
+		// Check if certificate has already been downloaded
+		$this->review_certificate = $this->reviewCertificateRepository->getReviewerCertificate(
+			$currentUser->_data['id'], 
+			$params['submission']
+		);
+		
+		if ($this->review_certificate) {
+			$request->getSession()->setSessionVar(
+				'notification', 
+				__('plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded')
+			);
+			$request->redirect(null, 'reviewer', 'submission', $params['submission']);
+			return;
+		}
+		
+		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "C.";
+		
 		$this->reviewer();
-		// Set journal data into certificate dataset
 		$this->journal();
-		// Set submission data into certificate dataset
 		$this->submission($params['submission']);
-
-		if (!$this->review_certificate) {
-			$this->reviewCertificateRepository->registerReviewerCertificate($currentUser->_data['id'], $params['submission']);
-		}
-
+		
+		// Register certificate download before generating PDF
+		$this->reviewCertificateRepository->registerReviewerCertificate($currentUser->_data['id'], $params['submission']);
+		
+		// Obtener el submission
+		$submission = Repo::submission()->get($params['submission']);
+		
+		// Generar el PDF y obtener el contenido
 		import('plugins.generic.exportReviewerCertificate.src.PDFLib');
-		return (new PDFLib($this->certificate_dataset))->stream();
+		$pdfLib = new PDFLib($this->certificate_dataset);
+		$pdfContent = $pdfLib->output();
+		
+		// Save file and register in activity log
+		if ($submission) {
+			$submissionFile = $this->saveReviewerCertificatePDF($request, $submission, $currentUser, $pdfContent);
+			
+			if ($submissionFile) {
+				$reviewerName = str_replace(' ', '_', $currentUser->getFullName());
+				$fileName = 'certificado_revisor_' . $reviewerName . '_' . date('YmdHis') . '.pdf';
+				
+				$eventLog = Repo::eventLog()->newDataObject([
+					'assocType' => PKPApplication::ASSOC_TYPE_SUBMISSION,
+					'assocId' => $submission->getId(),
+					'eventType' => SUBMISSION_LOG_REVIEWER_CERTIFICATE_DOWNLOAD,
+					'userId' => $currentUser->getId(),
+					'message' => 'plugins.generic.exportReviewerCertificate.log.certificateDownloaded',
+					'isTranslated' => false,
+					'dateLogged' => Core::getCurrentDate(),
+					'reviewerName' => $currentUser->getFullName(),
+					'username' => $currentUser->getUsername(),
+					'filename' => $fileName
+				]);
+				Repo::eventLog()->add($eventLog);
+			}
+		}
+		
+		// Download PDF to browser
+		header('Content-Type: application/pdf');
+		header('Content-Disposition: inline; filename="' . $this->certificate_dataset['reviewer_fullname'] . '-certificate.pdf"');
+		echo $pdfContent;
+		exit;
 	}
 
 	/**
@@ -185,5 +243,65 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	{
 		$month = strtolower(date('F', strtotime($date)));
 		return __('plugins.generic.exportReviewerCertificate.pdf.month.' . $month);
+	}
+
+	/**
+	 * Save reviewer certificate PDF to OJS file system
+	 * @param $request Request
+	 * @param $submission Submission
+	 * @param $reviewer User
+	 * @param $pdfContent string Binary PDF content
+	 * @return SubmissionFile|null
+	 */
+	private function saveReviewerCertificatePDF($request, $submission, $reviewer, $pdfContent)
+	{
+		try {
+			$reviewAssignmentDao = DAORegistry::getDAO('ReviewAssignmentDAO');
+			$reviewAssignments = $reviewAssignmentDao->getBySubmissionId($submission->getId());
+			
+			$reviewAssignment = null;
+			foreach ($reviewAssignments as $ra) {
+				if ($ra->getReviewerId() == $reviewer->getId() && $ra->getDateCompleted()) {
+					$reviewAssignment = $ra;
+					break;
+				}
+			}
+			
+			if (!$reviewAssignment) {
+				return null;
+			}
+			
+			$reviewerName = str_replace(' ', '_', $reviewer->getFullName());
+			$fileName = 'certificado_revisor_' . $reviewerName . '_' . date('YmdHis') . '.pdf';
+			
+			$tempFilePath = tempnam(sys_get_temp_dir(), 'cert');
+			file_put_contents($tempFilePath, $pdfContent);
+			
+			$context = $request->getContext();
+			$submissionDir = 'contexts/' . $context->getId() . '/submissions/' . $submission->getId() . '/';
+			$relativePath = $submissionDir . uniqid() . '.pdf';
+			
+			$fileService = app(PKPFileService::class);
+			$fileId = $fileService->add($tempFilePath, $relativePath);
+			
+			unlink($tempFilePath);
+			
+			$submissionFile = Repo::submissionFile()->newDataObject([
+				'fileId' => $fileId,
+				'fileStage' => SubmissionFile::SUBMISSION_FILE_REVIEW_ATTACHMENT,
+				'submissionId' => $submission->getId(),
+				'uploaderUserId' => $reviewer->getId(),
+				'assocType' => PKPApplication::ASSOC_TYPE_REVIEW_ASSIGNMENT,
+				'assocId' => $reviewAssignment->getId(),
+				'name' => ['en' => $fileName, 'es' => $fileName]
+			]);
+			
+			$submissionFileId = Repo::submissionFile()->add($submissionFile);
+			
+			return Repo::submissionFile()->get($submissionFileId);
+			
+		} catch (\Exception $e) {
+			return null;
+		}
 	}
 }
