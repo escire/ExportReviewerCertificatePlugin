@@ -31,7 +31,7 @@ If you have server access, you can clone this repo into <ojs_root_dir>/plugins/g
 ```
 cd /<ojs_root_dir>/plugins/generic
 ```
-2. Clone this repo using **ojs33_export_reviewer_certificate_plugin** branch from plugin´s [github repository](https://github.com/escire-ojs-plugins/exportReviewerCertificate/tree/ojs33_export_reviewer_certificate_plugin)
+2. Clone this repo using **ojs33_export_reviewer_certificate_plugin** branch from plugin´s [github repository](https://github.com/escire/ExportReviewerCertificatePlugin)
 ```
 git clone --branch ojs33_export_reviewer_certificate_plugin --single-branch https://github.com/escire-ojs-plugins/exportReviewerCertificate/tree/ojs33_export_reviewer_certificate_plugin
 ```
