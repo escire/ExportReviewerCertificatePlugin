@@ -23,7 +23,7 @@ class ExportReviewerCertificateMigration  extends Migration
 {
     public function up(): void
     {
-        Schema::create('review_certificates', function (Blueprint $table) {
+        Capsule::schema()->create('review_certificates', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
             $table->integer('submission_id');
@@ -33,6 +33,6 @@ class ExportReviewerCertificateMigration  extends Migration
 
     public function down(): void
     {
-        Schema::drop('review_certificates');
+        Capsule::schema()->drop('review_certificates');
     }
 }
