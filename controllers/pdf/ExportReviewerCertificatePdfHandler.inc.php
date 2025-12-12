@@ -15,6 +15,16 @@
  */
 
 import('classes.handler.Handler');
+import('plugins.generic.exportReviewerCertificate.classes.ExportReviewerCertificateDAO');
+import('lib.pkp.classes.log.SubmissionLog');
+import('lib.pkp.classes.log.SubmissionFileLog');
+import('classes.log.SubmissionEventLogEntry');
+import('lib.pkp.classes.log.SubmissionFileEventLogEntry');
+import('lib.pkp.classes.file.FileManager');
+import('lib.pkp.classes.submission.SubmissionFile');
+
+//Constante para el evento de descarga de certificado de revisor
+define('SUBMISSION_LOG_REVIEWER_CERTIFICATE_DOWNLOAD', 0x40000020);
 
 /**
  * @class ExportReviewerCertificatePdfHandler
@@ -25,7 +35,8 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	private $_request;
 	private $locale;
 	private $certificate_dataset;
-
+	private $exportReviewerCertificateDAO;
+	private $exportReviewerCertificate;
 	public function __construct()
 	{
 		// Allow just reviewer roles to download certificates
@@ -44,10 +55,8 @@ class ExportReviewerCertificatePdfHandler extends Handler
 			"certificate_editor_name" => NULL,
 			"certificate_editor_institution" => NULL,
 			"certificate_editor_email" => NULL,
-			"reviewer_gender" => NULL,
 			"reviewer_title" => NULL,
 			"reviewer_fullname" => NULL,
-			"reviewer_institution" => NULL,
 			"publication_title" => NULL
 		];
 	}
@@ -77,34 +86,78 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		$currentUser = $request->getUser();
 		$this->_request = $request;
 		$params = $request->_requestVars;
+		
+		// Inicializar el DAO
+		import('plugins.generic.exportReviewerCertificate.classes.ExportReviewerCertificateDAO');
+		$this->exportReviewerCertificateDAO = new ExportReviewerCertificateDAO();
+		
 		// Validations
 		if (!$currentUser) {
-			return new JSONMessage("Error", "User is not logged in");
+			return new JSONMessage(false, __('plugins.generic.exportReviewerCertificate.error.notLoggedIn'));
 		}
 		if (!isset($params['submission'])) {
-			return new JSONMessage("Error", "Submission not setted");
+			return new JSONMessage(false, __('plugins.generic.exportReviewerCertificate.error.submissionNotSet'));
 		}
-		if (!isset($params["reviewer_gender"])) {
-			return new JSONMessage("Error", "Reviewer gender not setted");
+		
+		// Verificar si el certificado ya fue descargado anteriormente
+		$this->exportReviewerCertificate = $this->exportReviewerCertificateDAO->getByUserAndSubmission(
+			$currentUser->_data['id'], 
+			$params['submission']
+		);
+		
+		if ($this->exportReviewerCertificate) {
+			// El certificado ya fue descargado, mostrar mensaje y redirigir
+			$request->getSession()->setSessionVar('notification', __('plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded'));
+			$request->redirect(null, 'reviewer', 'submission', $params['submission']);
+			return;
 		}
-		// Set certificate dataset from request params data
-		if ($params["reviewer_gender"] == "male") {
-			$this->certificate_dataset["reviewer_gender"] = __("plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.male");
-		}
-		if ($params["reviewer_gender"] == "female") {
-			$this->certificate_dataset["reviewer_gender"] = __("plugins.generic.exportReviewerCertificate.pdf.reviewer_gender.female");
-		}
-		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "c.";
-		$this->certificate_dataset["reviewer_institution"] = (isset($params['reviewer_institution']) && $params['reviewer_institution'] != "" ? $params['reviewer_institution'] : __('plugins.generic.exportReviewerCertificate.pdf.independent_reviewer'));
+		
+		// Si no existe registro, permitir la descarga
+		$this->certificate_dataset["reviewer_title"] = isset($params['reviewer_title']) ? $params['reviewer_title'] : "C.";
+		
 		// Set reviewer data into certificate dataset
 		$this->reviewer();
 		// Set journal data into certificate dataset
 		$this->journal();
 		// Set submission data into certificate dataset
 		$this->submission($params['submission']);
-		// dd($this->certificate_dataset);
-		// 
-		return (new PDFLib($this->certificate_dataset))->stream();
+		
+		// Crear el registro ANTES de generar el PDF 
+		$this->exportReviewerCertificateDAO->insert($currentUser->_data['id'], $params['submission']);
+		
+		// Obtener el submission
+		$submissionDao = DAORegistry::getDAO('SubmissionDAO');
+		$submission = $submissionDao->getById($params['submission']);
+		
+		// Generar el PDF y obtener el contenido
+		$pdfLib = new PDFLib($this->certificate_dataset);
+		$pdfContent = $pdfLib->output();
+		
+		if ($submission) {
+			// Guardar el PDF en el sistema de archivos de OJS
+			$submissionFile = $this->saveReviewerCertificatePDF($request, $submission, $currentUser, $pdfContent);
+			
+			if ($submissionFile) {
+				// Registrar solo en el log general del submission
+				SubmissionLog::logEvent(
+					$request, 
+					$submission, 
+					SUBMISSION_LOG_REVIEWER_CERTIFICATE_DOWNLOAD, 
+					'plugins.generic.exportReviewerCertificate.log.certificateDownloaded',
+					array(
+						'reviewerName' => $currentUser->getFullName(),
+						'username' => $currentUser->getUsername(),
+						'filename' => $submissionFile->getLocalizedData('name')
+					)
+				);
+			}
+		}
+		
+		// Descargar el PDF al navegador usando el contenido ya generado
+		header('Content-Type: application/pdf');
+		header('Content-Disposition: inline; filename="' . $this->certificate_dataset['reviewer_fullname'] . '-certificate.pdf"');
+		echo $pdfContent;
+		exit;
 	}
 
 	/**
@@ -117,7 +170,7 @@ class ExportReviewerCertificatePdfHandler extends Handler
 				$locale = $this->locale;
 				$reviewer = json_decode(json_encode($reviewer->_data, JSON_UNESCAPED_UNICODE));
 				$this->certificate_dataset['reviewer_fullname'] = $reviewer->givenName->$locale . ' ' . $reviewer->familyName->$locale;
-			}
+			}                                                                       
 		}
 	}
 
@@ -165,10 +218,10 @@ class ExportReviewerCertificatePdfHandler extends Handler
 					$this->certificate_dataset['day_number'] = date('d', strtotime($publication->lastModified));
 					$this->certificate_dataset['month_name'] =  $this->monthText($publication->lastModified);
 					$this->certificate_dataset['year_number'] = date('Y', strtotime($publication->lastModified));
-					$this->certificate_dataset['today_day_number'] = date('d');
-					$this->certificate_dataset['today_month_number'] = date('m');
-					$this->certificate_dataset['today_month_name'] =  $this->monthText(date('Y-m-d'));
-					$this->certificate_dataset['today_year_number'] = date('Y');
+					$this->certificate_dataset['today_day_number'] =  ($this->exportReviewerCertificate ? date('d', strtotime($this->exportReviewerCertificate->getCreatedAt())) : date('d'));
+					$this->certificate_dataset['today_month_number'] = ($this->exportReviewerCertificate ? date('m', strtotime($this->exportReviewerCertificate->getCreatedAt())) : date('m'));
+					$this->certificate_dataset['today_month_name'] =  ($this->exportReviewerCertificate ? $this->monthText(date('Y-m-d', strtotime($this->exportReviewerCertificate->getCreatedAt()))) : $this->monthText(date('Y-m-d')));
+					$this->certificate_dataset['today_year_number'] = ($this->exportReviewerCertificate ? date('Y', strtotime($this->exportReviewerCertificate->getCreatedAt())) : date('Y'));
 				}
 			}
 		}
@@ -181,5 +234,76 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	{
 		$month = strtolower(date('F', strtotime($date)));
 		return __('plugins.generic.exportReviewerCertificate.pdf.month.' . $month);
+	}
+
+	/**
+	 * Guardar el PDF del certificado en el sistema de archivos de OJS
+	 * @param $request Request
+	 * @param $submission Submission
+	 * @param $reviewer User
+	 * @param $pdfContent string Contenido binario del PDF
+	 * @return SubmissionFile|null
+	 */
+	private function saveReviewerCertificatePDF($request, $submission, $reviewer, $pdfContent)
+	{
+		try {
+			// Obtener el reviewAssignment más reciente de este revisor para este envio
+			$reviewAssignmentDao = DAORegistry::getDAO('ReviewAssignmentDAO');
+			$reviewAssignments = $reviewAssignmentDao->getBySubmissionId($submission->getId());
+			
+			$reviewAssignment = null;
+			foreach ($reviewAssignments as $ra) {
+				if ($ra->getReviewerId() == $reviewer->getId() && $ra->getDateCompleted()) {
+					$reviewAssignment = $ra;
+					break;
+				}
+			}
+			
+			if (!$reviewAssignment) {
+				error_log('No se encontró reviewAssignment completado para el revisor');
+				return null;
+			}
+			
+			// Crear nombre de archivo
+			$reviewerName = str_replace(' ', '_', $reviewer->getFullName());
+			$fileName = 'certificado_revisor_' . $reviewerName . '_' . date('YmdHis') . '.pdf';
+			
+			// Guardar temporalmente el archivo
+			$fileManager = new FileManager();
+			$tempFilePath = tempnam(sys_get_temp_dir(), 'cert');
+			file_put_contents($tempFilePath, $pdfContent);
+			
+			// Obtener el directorio del envio
+			$context = $request->getContext();
+			$submissionDir = Services::get('submissionFile')->getSubmissionDir($context->getId(), $submission->getId());
+			
+			// Guardar el archivo en el sistema de archivos de OJS
+			$newFilePath = $submissionDir . '/' . uniqid() . '.pdf';
+			$fileId = Services::get('file')->add($tempFilePath, $newFilePath);
+			
+			// Limpiar archivo temporal
+			unlink($tempFilePath);
+			
+			// Crear el objeto SubmissionFile
+			$submissionFile = DAORegistry::getDAO('SubmissionFileDAO')->newDataObject();
+			$submissionFile->setData('fileId', $fileId);
+			$submissionFile->setData('fileStage', SUBMISSION_FILE_REVIEW_ATTACHMENT);
+			$submissionFile->setData('submissionId', $submission->getId());
+			$submissionFile->setData('uploaderUserId', $reviewer->getId());
+			$submissionFile->setData('assocType', ASSOC_TYPE_REVIEW_ASSIGNMENT);
+			$submissionFile->setData('assocId', $reviewAssignment->getId());
+			$submissionFile->setData('createdAt', Core::getCurrentDate());
+			$submissionFile->setData('updatedAt', Core::getCurrentDate());
+			$submissionFile->setData('name', $fileName, $this->locale);
+			
+			// Guardar en la base de datos usando el servicio
+			$submissionFile = Services::get('submissionFile')->add($submissionFile, $request);
+			
+			return $submissionFile;
+			
+		} catch (Exception $e) {
+			error_log('Error al guardar certificado de revisor: ' . $e->getMessage());
+			return null;
+		}
 	}
 }

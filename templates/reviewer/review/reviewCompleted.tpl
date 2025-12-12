@@ -76,90 +76,40 @@ op="fetchGrid" submissionId=$submission->getId() stageId=$reviewAssignment->getS
 <div class="export-certificate-form-container">
     <div class="instructions">{translate key="plugins.generic.exportReviewerCertificate.reviewer.instruction"}</div>
     <div class="separator"></div>
-    <div class="column">
-        <div class="form-group">
-            <label><span>*</span> {translate key="plugins.generic.exportReviewerCertificate.reviewer.genre_label"}</label>
-            <select id="reviewer_gender">
-                <option value="" selected>{translate key="plugins.generic.exportReviewerCertificate.reviewer.selectOption"}</option>
-                <option value="female">{translate key="plugins.generic.exportReviewerCertificate.reviewer.femaleOption"}</option>
-                <option value="male">{translate key="plugins.generic.exportReviewerCertificate.reviewer.maleOption"}</option>
-            </select>
+    
+    {if $certificateDownloaded}
+        <div class="pkp_notification" style="margin: 10px 0; padding: 10px; background: #f5f5f5; border-left: 4px solid #22d322;">
+            <strong>{translate key="plugins.generic.exportReviewerCertificate.certificate.download"}</strong>
+            <p style="margin: 5px 0 0 0;">{translate key="plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded"}</p>
         </div>
-    </div>
-    <div class="column">
-        <div class="form-group">
-            <label>{translate key="plugins.generic.exportReviewerCertificate.reviewer.title_label"}</label>
-            <input type="text" id="reviewer_title" placeholder="C | Dr | Dra | LI | MC | MRT" />
+    {else}
+        <div class="column">
+            <div class="form-group">
+                <label>{translate key="plugins.generic.exportReviewerCertificate.reviewer.title_label"}</label>
+                <input type="text" id="reviewer_title" placeholder="C | Dr | Dra | LI | MC | MRT" />
+            </div>
         </div>
-    </div>
-    <div class="column">
-        <div class="form-group">
-            <label><span>*</span> {translate key="plugins.generic.exportReviewerCertificate.reviewer.institution_type_label"}</label>
-            <select id="reviewer_institution_type">
-                <option value="" selected>{translate key="plugins.generic.exportReviewerCertificate.reviewer.selectOption"}</option>
-                <option value="independent">{translate key="plugins.generic.exportReviewerCertificate.reviewer.independentTypeOption"}</option>
-                <option value="institution">{translate key="plugins.generic.exportReviewerCertificate.reviewer.institutionTypeOption"}</option>
-            </select>
-        </div>
-        <div id="institution_container" class="form-group">
-            <label><span>*</span> {translate key="plugins.generic.exportReviewerCertificate.reviewer.institution_label"}</label>
-            <input id="reviewer_institution" type="text" placeholder="{translate key='plugins.generic.exportReviewerCertificate.reviewer.institutionTypeOption'}" />
-        </div>
-    </div>
+    {/if}
 </div>
 
-<div class="pkp_controllers_grid ">
-    <div class="actions">
-        <a href="{url page=" reviewer" op="download" submission=$submission->getId()}"
-            target="_BLANK"
-            title="{translate key="plugins.generic.exportReviewerCertificate.reviewer.button_title" }">{translate
-            key="plugins.generic.exportReviewerCertificate.reviewer.button_label"}</a>
+{if !$certificateDownloaded}
+    <div class="pkp_controllers_grid ">
+        <div class="actions">
+            <a href="{url page=" reviewer" op="download" submission=$submission->getId()}"
+                target="_BLANK"
+                title="{translate key="plugins.generic.exportReviewerCertificate.reviewer.button_title" }">{translate
+                key="plugins.generic.exportReviewerCertificate.reviewer.button_label"}</a>
+        </div>
     </div>
-</div>
+{/if}
 
+{if !$certificateDownloaded}
 <script>
-    $(function(){
-        $('.actions').hide();
-    });
-    function showButton(){
-        $('.actions').hide();
-        let activeButton = true;
-        if($('#reviewer_gender option:selected').val() == ""){
-            activeButton = false;
-        }
-        if($('#reviewer_institution_type option:selected').val() == ""){
-            activeButton = false;
-        }
-        if($('#reviewer_institution_type :selected').val() == 'institution' && $('#reviewer_institution').val() == ""){
-            activeButton = false;
-        }
-        if(activeButton){
-            $('.actions').show();
-        }
-    }
-    $(document).on('change','#reviewer_gender',function(){
-        showButton();
-    });
-    $(document).on('change','#reviewer_institution_type',function(){
-        if($(this,' :selected').val() == 'institution'){
-            $('#institution_container').show();
-            $('#reviewer_institution').val('');
-        }
-        if($(this,' :selected').val() == 'independent'){
-            $('#institution_container').hide();
-            $('#reviewer_institution').val('');
-        }
-        showButton();
-    });
-    $(document).on('keyup','#reviewer_institution',function(){
-        showButton();
-    });
     $('.actions a').on('click',function(){
         let href = $(this).attr('href');
-        let params = "&reviewer_gender="+$('#reviewer_gender option:selected').val();
+        let params = "";
         params += "&reviewer_title="+($("#reviewer_title").val() != "" ? $("#reviewer_title").val() : "C. ");
-        params += "&reviewer_institution_type="+$('#reviewer_institution_type :selected').val()
-        params += "&reviewer_institution="+($('#reviewer_institution_type :selected').val() == 'institution' ? $('#reviewer_institution').val() : "")
         $(this).attr('href',href+params);
     });
 </script>
+{/if}
