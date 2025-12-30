@@ -200,6 +200,10 @@ class PDFLib
 
     private function getDayNumber(string $dayNumber) : string
     {
+        // Remove leading zeros first
+        $dayNumber = ltrim($dayNumber, '0');
+        
+        // Ensure we have "01" format for single digits
         $key = $dayNumber < 10 ? "0".$dayNumber : $dayNumber;
         $dayTextArray=[
             "01"=>__('plugins.generic.exportReviewerCertificate.pdf.day.text01'),
