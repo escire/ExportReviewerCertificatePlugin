@@ -210,14 +210,32 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	{
 		if (Application::get()->getRequest()->getContext()) {
 			if ($submission = DAORegistry::getDAO('SubmissionDAO')->getById($submissionId)) {
+				$currentUser = Application::get()->getRequest()->getUser();
+				
+				// Obtener el reviewAssignment del revisor actual para obtener la fecha de finalización
+				$reviewAssignmentDao = DAORegistry::getDAO('ReviewAssignmentDAO');
+				$reviewAssignments = $reviewAssignmentDao->getBySubmissionId($submissionId);
+				
+				$reviewCompletedDate = null;
+				foreach ($reviewAssignments as $ra) {
+					if ($ra->getReviewerId() == $currentUser->getId() && $ra->getDateCompleted()) {
+						$reviewCompletedDate = $ra->getDateCompleted();
+						break;
+					}
+				}
+				
 				$submission = json_decode(json_encode($submission->_data, JSON_UNESCAPED_UNICODE));
 				if ($publication = $submission->publications[0]) {
 					$locale = $this->locale;
 					$publication = json_decode(json_encode($publication->_data));
 					$this->certificate_dataset['publication_title'] = $publication->title->$locale;
-					$this->certificate_dataset['day_number'] = date('d', strtotime($publication->lastModified));
-					$this->certificate_dataset['month_name'] =  $this->monthText($publication->lastModified);
-					$this->certificate_dataset['year_number'] = date('Y', strtotime($publication->lastModified));
+					
+					// Usar la fecha de finalización de la revisión en lugar de lastModified
+					$dateToUse = $reviewCompletedDate ? $reviewCompletedDate : date('Y-m-d H:i:s');
+					$this->certificate_dataset['day_number'] = date('d', strtotime($dateToUse));
+					$this->certificate_dataset['month_name'] =  $this->monthText($dateToUse);
+					$this->certificate_dataset['year_number'] = date('Y', strtotime($dateToUse));
+					
 					$this->certificate_dataset['today_day_number'] =  ($this->exportReviewerCertificate ? date('d', strtotime($this->exportReviewerCertificate->getCreatedAt())) : date('d'));
 					$this->certificate_dataset['today_month_number'] = ($this->exportReviewerCertificate ? date('m', strtotime($this->exportReviewerCertificate->getCreatedAt())) : date('m'));
 					$this->certificate_dataset['today_month_name'] =  ($this->exportReviewerCertificate ? $this->monthText(date('Y-m-d', strtotime($this->exportReviewerCertificate->getCreatedAt()))) : $this->monthText(date('Y-m-d')));

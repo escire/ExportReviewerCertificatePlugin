@@ -14,6 +14,7 @@
  * @github: https://github.com/escire-ojs-plugins/exportReviewerCertificate
  */
 
+
 import('pages/management/SettingsHandler');
 import('lib.pkp.classes.validation.ValidatorFactory');
 
@@ -37,9 +38,12 @@ class ExportReviewerCertificateSettingsTabFormHandler extends SettingsHandler
 		$paramKeys = array_keys($this->args);
 
 		foreach ($paramKeys as $paramKey) {
+			// Campos regulares (texto, etc.)
 			if (!(in_array($paramKey, ['certificateWatermark', 'certificateHeader', 'certificateEditorSignature']))) {
 				$this->context->setData($paramKey, $this->args[$paramKey]);
 			}
+			
+			// Campos de imagen (requieren procesamiento especial)
 			if (in_array($paramKey, ['certificateWatermark', 'certificateHeader', 'certificateEditorSignature'])) {
 				if ($paramKey == "certificateWatermark") {
 					$keyName = "certificate_watermark_";
@@ -69,43 +73,67 @@ class ExportReviewerCertificateSettingsTabFormHandler extends SettingsHandler
 	{
 		import('classes.file.PublicFileManager');
 		$publicFileManager = new PublicFileManager();
-		$fileProperties = ["name" => NULL, "uploadName" => NULL, "altText" => NULL];
-		// Check if context has value and params is null
-
-		if ($this->context->getData($paramKey) && !$this->args[$paramKey]) {
-		//if (isset($this->args[$paramKey]['temporaryFileId']) && !$this->args[$paramKey]['temporaryFileId'] && $this->context->getData($paramKey)) {
-			$fileProperties = json_decode($this->context->getData($paramKey), true);
-			$this->deleteExistingFile($fileProperties['uploadName']);
+		
+		// Si no viene nada en el request, mantener lo que ya está guardado
+		if (!isset($this->args[$paramKey]) || $this->args[$paramKey] === null) {
+			if ($this->context->getData($paramKey)) {
+				return $this->context->getData($paramKey);
+			}
 			return "";
 		}
-		// Check if context has value and params has value and temporary file id is null
-		if(isset($this->args[$paramKey]['temporaryFileId'])){
-		if ($this->args[$paramKey] && !$this->args[$paramKey]['temporaryFileId'] && $this->context->getData($paramKey)) {
-			$fileProperties = json_decode($this->context->getData($paramKey), true);
-			$fileProperties['altText'] = $this->args[$paramKey]['altText'];
+		
+		// Detectar eliminación explícita (array vacío)
+		if (empty($this->args[$paramKey]) && $this->context->getData($paramKey)) {
+			if (is_array($this->args[$paramKey]) && count($this->args[$paramKey]) === 0) {
+				$fileProperties = json_decode($this->context->getData($paramKey), true);
+				$this->deleteExistingFile($fileProperties['uploadName']);
+				return "";
+			}
+			return $this->context->getData($paramKey);
 		}
-		}
-		// Check if request has temporary file id
-		//if ($this->args[$paramKey] && $this->args[$paramKey]['temporaryFileId']) {
+		
+		// Nueva imagen subida (tiene temporaryFileId)
 		if (isset($this->args[$paramKey]['temporaryFileId']) && $this->args[$paramKey]['temporaryFileId']) {
-			// Delete file if exists
+			// Borrar imagen anterior si existe
 			if ($this->context->getData($paramKey)) {
 				$fileProperties = json_decode($this->context->getData($paramKey), true);
 				$this->deleteExistingFile($fileProperties['uploadName']);
 			}
+			
 			$temporaryFileId = $this->args[$paramKey]['temporaryFileId'];
 			$user = $this->request->getUser();
 			$temporaryFile = DAORegistry::getDAO('TemporaryFileDAO')->getTemporaryFile($temporaryFileId, $user->getId());
-			// Prepare fileProperties array
+			
+			$fileName = $keyName . $this->context->getId() . $publicFileManager->getImageExtension($temporaryFile->getFileType());
+			$publicFileManager->copyContextFile($this->context->getId(), $temporaryFile->getFilePath(), $fileName);
+			
+			// Obtener dimensiones de la imagen
+			$filePath = $publicFileManager->getContextFilesPath($this->context->getId()) . '/' . $fileName;
+			list($width, $height) = getimagesize($filePath);
+			
 			$fileProperties = [
 				"name" => $temporaryFile->getData('originalFileName'),
-				"uploadName" => $keyName . $this->context->getId() . $publicFileManager->getImageExtension($temporaryFile->getFileType()),
-				"altText" => $this->args[$paramKey]['altText']
+				"uploadName" => $fileName,
+				"width" => $width,
+				"height" => $height,
+				"dateUploaded" => Core::getCurrentDate(),
+				"altText" => !empty($this->args[$paramKey]['altText']) ? $this->args[$paramKey]['altText'] : ''
 			];
-			$publicFileManager->copyContextFile($this->context->getId(), $temporaryFile->getFilePath(), $fileProperties['uploadName']);
+			
+			return json_encode($fileProperties);
 		}
-
-		return "{\"name\":\"" . $fileProperties['name'] . "\",\"uploadName\":\"" . $fileProperties['uploadName'] . "\",\"altText\":\"" . $fileProperties['altText'] . "\"}";
+		
+		// El formulario reenvió los datos existentes (pasa en ediciones de solo texto)
+		if (is_array($this->args[$paramKey]) && isset($this->args[$paramKey]['uploadName'])) {
+			return json_encode($this->args[$paramKey]);
+		}
+		
+		// Por defecto, mantener lo que ya está en la base de datos
+		if ($this->context->getData($paramKey)) {
+			return $this->context->getData($paramKey);
+		}
+		
+		return "";
 	}
 
 
@@ -119,15 +147,11 @@ class ExportReviewerCertificateSettingsTabFormHandler extends SettingsHandler
 	{
 		import('classes.file.PublicFileManager');
 		$publicFileManager = new PublicFileManager();
-//		error_log( print_r('*********Base Path**********', TRUE) );
 		$basePath = $this->request->getBasePath();
-		error_log( print_r($basePath, TRUE) );
-//		error_log( print_r('*********Get Path**********', TRUE) );
-                //error_log( print_r( __DIR__)[0] . $this->request->getBasePath() . '/public/journals/' . $this->context->getId() . '/' . $fileName, TRUE) );
+		
 		if (!empty($this->context->getId()) && !empty($basePath)) {
 			$filePath = explode($this->request->getBasePath(), __DIR__)[0] . $this->request->getBasePath() . '/public/journals/' . $this->context->getId() . '/' . $fileName;
 			$publicFileManager->deleteByPath($filePath);
 		}
-		//$publicFileManager->deleteByPath($filePath);
 	}
  }
