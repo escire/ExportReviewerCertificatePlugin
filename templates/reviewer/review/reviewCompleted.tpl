@@ -63,7 +63,7 @@ op="fetchGrid" submissionId=$submission->getId() stageId=$reviewAssignment->getS
         color: red
     }
 
-    #institution_container{
+    #institution_container {
         display: none;
         line-height: 1.1;
         text-align: justify;
@@ -76,11 +76,13 @@ op="fetchGrid" submissionId=$submission->getId() stageId=$reviewAssignment->getS
 <div class="export-certificate-form-container">
     <div class="instructions">{translate key="plugins.generic.exportReviewerCertificate.reviewer.instruction"}</div>
     <div class="separator"></div>
-    
+
     {if $certificateDownloaded}
-        <div class="pkp_notification" style="margin: 10px 0; padding: 10px; background: #f5f5f5; border-left: 4px solid #22d322;">
+        <div class="pkp_notification"
+            style="margin: 10px 0; padding: 10px; background: #f5f5f5; border-left: 4px solid #22d322;">
             <strong>{translate key="plugins.generic.exportReviewerCertificate.certificate.download"}</strong>
-            <p style="margin: 5px 0 0 0;">{translate key="plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded"}</p>
+            <p style="margin: 5px 0 0 0;">
+                {translate key="plugins.generic.exportReviewerCertificate.certificate.alreadyDownloaded"}</p>
         </div>
     {else}
         <div class="column">
@@ -95,21 +97,20 @@ op="fetchGrid" submissionId=$submission->getId() stageId=$reviewAssignment->getS
 {if !$certificateDownloaded}
     <div class="pkp_controllers_grid ">
         <div class="actions">
-            <a href="{url page=" reviewer" op="download" submission=$submission->getId()}"
-                target="_BLANK"
+            <a href="{url page="reviewer" op="download" submission=$submission->getId()}" target="_BLANK"
                 title="{translate key="plugins.generic.exportReviewerCertificate.reviewer.button_title" }">{translate
-                key="plugins.generic.exportReviewerCertificate.reviewer.button_label"}</a>
+                        key="plugins.generic.exportReviewerCertificate.reviewer.button_label"}</a>
         </div>
     </div>
 {/if}
 
 {if !$certificateDownloaded}
-<script>
-    $('.actions a').on('click',function(){
-        let href = $(this).attr('href');
-        let params = "";
-        params += "&reviewer_title="+($("#reviewer_title").val() != "" ? $("#reviewer_title").val() : "C. ");
-        $(this).attr('href',href+params);
-    });
-</script>
+    <script>
+        $('.actions a').on('click', function() {
+            let href = $(this).attr('href');
+            let params = "";
+            params += "&reviewer_title=" + ($("#reviewer_title").val() != "" ? $("#reviewer_title").val() : "C. ");
+            $(this).attr('href', href + params);
+        });
+    </script>
 {/if}

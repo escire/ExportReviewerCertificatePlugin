@@ -1,1 +1,14 @@
 node_modules
+
+# Cypress
+cypress/videos
+cypress/screenshots
+cypress/downloads
+
+# Environment variables
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db

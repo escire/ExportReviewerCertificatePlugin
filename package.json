@@ -7,10 +7,17 @@
 		"node": ">=14.0.0"
 	},
 	"scripts": {
-		"release": "np"
+		"release": "np",
+		"cypress:open": "cypress open",
+		"cypress:run": "cypress run",
+		"cypress:run:chrome": "cypress run --browser chrome",
+		"cypress:run:firefox": "cypress run --browser firefox",
+		"test": "cypress run"
 	},
 	"devDependencies": {
 		"cypress": "^13.17.0",
+		"cypress-file-upload": "^5.0.8",
+		"dotenv": "^16.4.7",
 		"np": "*"
 	},
 	"dependencies": {

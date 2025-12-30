@@ -1,19 +1,27 @@
-describe('Export Reviewer Certificate plugin tests', () => {
-  it('Export Reviewer Certificate is enable', function () {
-    cy.login('mcruzescire', 'PqaEtiiZ.2So.');
-    cy.visit('https://turia.uv.test/index.php/celestinesca/management/settings/website#plugins');
-    cy.get('#cell-exportreviewercertificateplugin-name').should('exist').then(($element) => {
-      cy.get('[id*="select-cell-exportreviewercertificateplugin-enable"]').should('exist')
-        .then(($checkbox) => {
-          if (!$checkbox.is(':checked')) {
-            cy.log("Atention, Plugin is not enabled, starting enable");
-            cy.wrap($checkbox).check();
-            cy.log("OK, Plugin is enabled");
-          }
-          else{
-            cy.log("OK, Plugin is enabled");
-          }
-        });
+describe('Export Reviewer Certificate Plugin - Enable', () => {
+  beforeEach(() => {
+    // Suppress uncaught exceptions from OJS
+    cy.on('uncaught:exception', (err, runnable) => {
+      return false;
     });
   });
-})
+
+  it('Should enable the Export Reviewer Certificate plugin', () => {
+    // Login as admin using credentials from environment
+    const adminUser = Cypress.env('adminUser');
+    const adminPassword = Cypress.env('adminPassword');
+    cy.login(adminUser, adminPassword);
+
+    // Navigate to plugins page for 'rdp' journal
+    cy.navigateToPluginSettings('rdp');
+
+    // Enable the plugin
+    cy.enablePlugin('exportreviewercertificateplugin');
+
+    // Verify plugin is enabled
+    cy.get('[id*="select-cell-exportreviewercertificateplugin-enable"]')
+      .should('be.checked');
+
+    cy.log('Export Reviewer Certificate Plugin is enabled successfully');
+  });
+});
