@@ -56,30 +56,30 @@ class ExportReviewerCertificateForm extends FormComponent
 				"label" => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.label"),
 				"description" => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.label")
 			])
-			->addField(new FieldUploadImage('certificateWatermark', [
-				'groupId' => 'designDocumentSettings',
-				'label' => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.watermark.label"),
-				"description" => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.watermark.description"),
-				'value' => json_decode($context->getData('certificateWatermark')),
-				'isMultilingual' => false,
-				'isRequired' => false,
-				'baseUrl' => $baseUrl,
-				'options' => [
-					'url' => $temporaryFileApiUrl
-				]
-			]))
-			->addField(new FieldUploadImage('certificateHeader', [
-				'groupId' => 'designDocumentSettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.designDocumentSettings.header.label'),
-				"description" => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.header.description"),
-				'value' => json_decode($context->getData('certificateHeader')),
-				'isMultilingual' => false,
-				'isRequired' => false,
-				'baseUrl' => $baseUrl,
-				'options' => [
-					'url' => $temporaryFileApiUrl
-				]
-			]));
+		->addField(new FieldUploadImage('certificateWatermark', [
+			'groupId' => 'designDocumentSettings',
+			'label' => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.watermark.label"),
+			"description" => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.watermark.description"),
+			'value' => $context->getData('certificateWatermark') ? json_decode($context->getData('certificateWatermark'), true) : null,
+			'isMultilingual' => false,
+			'isRequired' => false,
+			'baseUrl' => $baseUrl,
+			'options' => [
+				'url' => $temporaryFileApiUrl
+			]
+		]))
+		->addField(new FieldUploadImage('certificateHeader', [
+			'groupId' => 'designDocumentSettings',
+			'label' => __('plugins.generic.exportReviewerCertificate.designDocumentSettings.header.label'),
+			"description" => __("plugins.generic.exportReviewerCertificate.designDocumentSettings.header.description"),
+			'value' => $context->getData('certificateHeader') ? json_decode($context->getData('certificateHeader'), true) : null,
+			'isMultilingual' => false,
+			'isRequired' => false,
+			'baseUrl' => $baseUrl,
+			'options' => [
+				'url' => $temporaryFileApiUrl
+			]
+		]));
 		// Certificate content settings group
 		$this
 			->addGroup([
@@ -140,18 +140,18 @@ class ExportReviewerCertificateForm extends FormComponent
 				"label" => __("plugins.generic.exportReviewerCertificate.certificateSignatureSettings.label"),
 				"description" => __("plugins.generic.exportReviewerCertificate.certificateSignatureSettings.description")
 			])
-			->addField(new FieldUploadImage('certificateEditorSignature', [
-				'groupId' => 'certificateSignatureSettings',
-				'label' => __('plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSignature.label'),
-				"description" => __("plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSignature.description"),
-				'value' => json_decode($context->getData('certificateEditorSignature')),
-				'isMultilingual' => false,
-				'isRequired' => true,
-				'baseUrl' => $baseUrl,
-				'options' => [
-					'url' => $temporaryFileApiUrl
-				]
-			]))
+		->addField(new FieldUploadImage('certificateEditorSignature', [
+			'groupId' => 'certificateSignatureSettings',
+			'label' => __('plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSignature.label'),
+			"description" => __("plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorSignature.description"),
+			'value' => $context->getData('certificateEditorSignature') ? json_decode($context->getData('certificateEditorSignature'), true) : null,
+			'isMultilingual' => false,
+			'isRequired' => true,
+			'baseUrl' => $baseUrl,
+			'options' => [
+				'url' => $temporaryFileApiUrl
+			]
+		]))
 			->addField(new FieldText('certificateEditorName', [
 				'groupId' => 'certificateSignatureSettings',
 				'label' => __('plugins.generic.exportReviewerCertificate.certificateSignatureSettings.certificateEditorName.label'),

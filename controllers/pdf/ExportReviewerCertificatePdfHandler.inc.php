@@ -24,7 +24,6 @@ use APP\plugins\generic\exportReviewerCertificate\repositories\ReviewerCertifica
 use PKP\core\Core;
 use PKP\core\JSONMessage;
 use PKP\core\PKPApplication;
-use PKP\db\DAORegistry;
 use PKP\facades\Locale;
 use PKP\file\FileManager;
 use PKP\log\event\PKPSubmissionEventLogEntry;
@@ -163,7 +162,7 @@ class ExportReviewerCertificatePdfHandler extends Handler
 				
 				$eventLogId = Repo::eventLog()->add($eventLog);
 				
-				error_log('ExportReviewerCertificate: Event log created with ID ' . $eventLogId);
+				//error_log('ExportReviewerCertificate: Event log created with ID ' . $eventLogId);
 			} else {
 				error_log('ExportReviewerCertificate: Failed to save submission file, no event log created');
 			}
@@ -198,12 +197,22 @@ class ExportReviewerCertificatePdfHandler extends Handler
 		if (Application::get()->getRequest()->getUser()) {
 			if ($journal = Application::get()->getRequest()->getContext()) {
 				$locale = $this->locale;
+				
+				// Obtener y decodificar los datos de imágenes antes de la conversión JSON
+				$watermarkData = $journal->getData('certificateWatermark');
+				$headerData = $journal->getData('certificateHeader');
+				$signatureData = $journal->getData('certificateEditorSignature');
+				
+				$watermark = $watermarkData ? json_decode($watermarkData, true) : null;
+				$header = $headerData ? json_decode($headerData, true) : null;
+				$signature = $signatureData ? json_decode($signatureData, true) : null;
+				
 				$journal = json_decode(json_encode($journal->_data, JSON_UNESCAPED_UNICODE));
 				$protocol = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https://' : 'http://');
 				$basePath = $protocol . $_SERVER['HTTP_HOST'] . $this->_request->getBasePath() . "/public/journals/" . $journal->id . "/";
 
-				$this->certificate_dataset['certificate_watermark'] = $basePath . (json_decode($journal->certificateWatermark)->uploadName);
-				$this->certificate_dataset['certificate_header'] = $basePath . (json_decode($journal->certificateHeader)->uploadName);
+				$this->certificate_dataset['certificate_watermark'] = $basePath . ($watermark['uploadName'] ?? '');
+				$this->certificate_dataset['certificate_header'] = $basePath . ($header['uploadName'] ?? '');
 
 				$this->certificate_dataset["certificate_greeting"] = $journal->certificateGreeting->$locale;
 				$this->certificate_dataset["certificate_content"] = $journal->certificateContent->$locale;
@@ -211,7 +220,7 @@ class ExportReviewerCertificatePdfHandler extends Handler
 				$this->certificate_dataset["certificate_date"] = $journal->certificateDate->$locale;
 				$this->certificate_dataset["certificate_goodbye"] = $journal->certificateGoodbye->$locale;
 
-				$this->certificate_dataset['certificate_editor_sign'] = $basePath . (json_decode($journal->certificateEditorSignature)->uploadName);
+				$this->certificate_dataset['certificate_editor_sign'] = $basePath . ($signature['uploadName'] ?? '');
 				$this->certificate_dataset['certificate_editor_name'] = $journal->certificateEditorName;
 				$this->certificate_dataset['certificate_editor_institution'] = $journal->certificateEditorInstitution ?? NULL;
 				$this->certificate_dataset['certificate_editor_email'] = $journal->certificateEditorEmail ?? NULL;
@@ -226,14 +235,31 @@ class ExportReviewerCertificatePdfHandler extends Handler
 	{
 		if (Application::get()->getRequest()->getContext()) {
 			if ($submission = Repo::submission()->get($submissionId)) {
+				$currentUser = Application::get()->getRequest()->getUser();
+				
+				// Obtener el reviewAssignment del revisor actual para obtener la fecha de finalización
+				$reviewAssignments = Repo::reviewAssignment()->getCollector()
+					->filterBySubmissionIds([$submissionId])
+					->filterByReviewerIds([$currentUser->getId()])
+					->getMany();
+				
+				$reviewCompletedDate = null;
+				foreach ($reviewAssignments as $ra) {
+					if ($ra->getDateCompleted()) {
+						$reviewCompletedDate = $ra->getDateCompleted();
+						break;
+					}
+				}
 				$submission = json_decode(json_encode($submission->_data, JSON_UNESCAPED_UNICODE));
 				if ($publication = $submission->publications->$submissionId) {
 					$locale = $this->locale;
 					$publication = $publication->_data;
 					$this->certificate_dataset['publication_title'] = $publication->title->$locale;
-					$this->certificate_dataset['day_number'] = date('d', strtotime($publication->lastModified));
-					$this->certificate_dataset['month_name'] =  $this->monthText($publication->lastModified);
-					$this->certificate_dataset['year_number'] = date('Y', strtotime($publication->lastModified));
+					// Usar la fecha de finalización de la revisión en lugar de lastModified
+					$dateToUse = $reviewCompletedDate ? $reviewCompletedDate : date('Y-m-d H:i:s');
+					$this->certificate_dataset['day_number'] = date('d', strtotime($dateToUse));
+					$this->certificate_dataset['month_name'] =  $this->monthText($dateToUse);
+					$this->certificate_dataset['year_number'] = date('Y', strtotime($dateToUse));
 					$this->certificate_dataset['today_day_number'] =  ($this->review_certificate ? date('d', strtotime($this->review_certificate['created_at'])) : date('d'));
 					$this->certificate_dataset['today_month_number'] = ($this->review_certificate ? date('m', strtotime($this->review_certificate['created_at'])) : date('m'));
 					$this->certificate_dataset['today_month_name'] =  ($this->review_certificate ? $this->monthText(date('Y-m-d', strtotime($this->review_certificate['created_at']))) : $this->monthText(date('Y-m-d')));

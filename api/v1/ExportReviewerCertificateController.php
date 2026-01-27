@@ -108,49 +108,70 @@ class ExportReviewerCertificateController extends PKPBaseController
      * @param $params array Request parameters
      * @param $context Context
      * @param $request PKPRequest
-     * @return string|null Return a uploaded image file properties JSON string or null.
+     * @return string Return uploaded image file properties as JSON string.
      */
-    private function uploadImage($paramKey, $keyName, $params, $context, $request): ?string
+    private function uploadImage($paramKey, $keyName, $params, $context, $request): string
     {
         $publicFileManager = new PublicFileManager();
-        $fileProperties = ["name" => NULL, "uploadName" => NULL, "altText" => NULL];
         
-        // Check if context has value and params is null
-        if ($context->getData($paramKey) && !$params[$paramKey]) {
-            $fileProperties = json_decode($context->getData($paramKey), true);
-            $this->deleteExistingFile($fileProperties['uploadName'], $context, $request);
-            return "";
+        // Obtener datos actuales de la base de datos
+        $currentDataString = $context->getData($paramKey);
+        $currentData = null;
+        if ($currentDataString && is_string($currentDataString)) {
+            $currentData = json_decode($currentDataString, true);
         }
         
-        // Check if context has value and params has value and temporary file id is null
-        if(isset($params[$paramKey]['temporaryFileId'])){
-            if ($params[$paramKey] && !$params[$paramKey]['temporaryFileId'] && $context->getData($paramKey)) {
-                $fileProperties = json_decode($context->getData($paramKey), true);
-                $fileProperties['altText'] = $params[$paramKey]['altText'];
+        // Si no viene nada en el request, mantener lo que ya está guardado
+        if (!isset($params[$paramKey]) || $params[$paramKey] === null) {
+            return $currentDataString ?: '';
+        }
+        
+        // Detectar eliminación explícita (array vacío sin temporaryFileId)
+        if (is_array($params[$paramKey]) && empty($params[$paramKey]['temporaryFileId'])) {
+            // Si es un array vacío, significa eliminación
+            if (count($params[$paramKey]) === 0) {
+                if ($currentData && isset($currentData['uploadName'])) {
+                    $this->deleteExistingFile($currentData['uploadName'], $context, $request);
+                }
+                return '';
+            }
+            // Si tiene uploadName, es un reenvío de datos existentes
+            if (isset($params[$paramKey]['uploadName'])) {
+                return json_encode($params[$paramKey], JSON_UNESCAPED_UNICODE);
             }
         }
         
-        // Check if request has temporary file id
+        // Nueva imagen subida
         if (isset($params[$paramKey]['temporaryFileId']) && $params[$paramKey]['temporaryFileId']) {
-            // Delete file if exists
-            if ($context->getData($paramKey)) {
-                $fileProperties = json_decode($context->getData($paramKey), true);
-                $this->deleteExistingFile($fileProperties['uploadName'], $context, $request);
+            // Eliminar archivo existente si hay
+            if ($currentData && isset($currentData['uploadName'])) {
+                $this->deleteExistingFile($currentData['uploadName'], $context, $request);
             }
+            
             $temporaryFileId = $params[$paramKey]['temporaryFileId'];
             $user = $request->getUser();
             $temporaryFile = DAORegistry::getDAO('TemporaryFileDAO')->getTemporaryFile($temporaryFileId, $user->getId());
+            $fileName = $keyName . $context->getId() . $publicFileManager->getImageExtension($temporaryFile->getFileType());
+            $publicFileManager->copyContextFile($context->getId(), $temporaryFile->getFilePath(), $fileName);
             
-            // Prepare fileProperties array
+            // Obtener dimensiones de la imagen
+            $filePath = $publicFileManager->getContextFilesPath($context->getId()) . '/' . $fileName;
+            list($width, $height) = getimagesize($filePath);
+            
             $fileProperties = [
                 "name" => $temporaryFile->getData('originalFileName'),
-                "uploadName" => $keyName . $context->getId() . $publicFileManager->getImageExtension($temporaryFile->getFileType()),
-                "altText" => $params[$paramKey]['altText']
+                "uploadName" => $fileName,
+                "width" => $width,
+                "height" => $height,
+                "dateUploaded" => \PKP\core\Core::getCurrentDate(),
+                "altText" => !empty($params[$paramKey]['altText']) ? $params[$paramKey]['altText'] : ''
             ];
-            $publicFileManager->copyContextFile($context->getId(), $temporaryFile->getFilePath(), $fileProperties['uploadName']);
+            
+            return json_encode($fileProperties, JSON_UNESCAPED_UNICODE);
         }
-
-        return json_encode($fileProperties);
+        
+        // Por defecto, mantener lo que ya está en la base de datos
+        return $currentDataString ?: '';
     }
 
     /**
