@@ -143,11 +143,11 @@ class PDFLib
         }
         // Content
         $pdfHtml .= '<div class="certificate--content">';
-        $pdfHtml .= ($this->keywords['certificate_greeting'] ?? '-').'<br>';
-        $pdfHtml .= ($this->keywords['certificate_content'] ?? '-').'<br>';
-        $pdfHtml .= ($this->keywords['institution_description'] ?? '-').'<br>';
-        $pdfHtml .= ($this->keywords['certificate_date'] ?? '-').'<br>';
-        $pdfHtml .= ($this->keywords['certificate_goodbye'] ?? '-').'<br>';
+        $pdfHtml .= ($this->keywords['certificate_greeting'] ?? '').'<br>';
+        $pdfHtml .= ($this->keywords['certificate_content'] ?? '').'<br>';
+        $pdfHtml .= ($this->keywords['institution_description'] ?? '').'<br>';
+        $pdfHtml .= ($this->keywords['certificate_date'] ?? '').'<br>';
+        $pdfHtml .= ($this->keywords['certificate_goodbye'] ?? '').'<br>';
         $pdfHtml .= '<div class="sender--container">
         <div class="signature--container">
         <img src="'.$this->keywords['certificate_editor_sign'].'" alt="'.$this->keywords['certificate_editor_name'].' signature" />
