@@ -198,7 +198,6 @@ class ExportReviewerCertificatePdfHandler extends Handler
 			if ($journal = Application::get()->getRequest()->getContext()) {
 				$locale = $this->locale;
 				
-				// Obtener y decodificar los datos de imágenes antes de la conversión JSON
 				$watermarkData = $journal->getData('certificateWatermark');
 				$headerData = $journal->getData('certificateHeader');
 				$signatureData = $journal->getData('certificateEditorSignature');
@@ -237,7 +236,7 @@ class ExportReviewerCertificatePdfHandler extends Handler
 			if ($submission = Repo::submission()->get($submissionId)) {
 				$currentUser = Application::get()->getRequest()->getUser();
 				
-				// Obtener el reviewAssignment del revisor actual para obtener la fecha de finalización
+				
 				$reviewAssignments = Repo::reviewAssignment()->getCollector()
 					->filterBySubmissionIds([$submissionId])
 					->filterByReviewerIds([$currentUser->getId()])
@@ -250,11 +249,15 @@ class ExportReviewerCertificatePdfHandler extends Handler
 						break;
 					}
 				}
-				$submission = json_decode(json_encode($submission->_data, JSON_UNESCAPED_UNICODE));
-				if ($publication = $submission->publications->$submissionId) {
-					$locale = $this->locale;
-					$publication = $publication->_data;
-					$this->certificate_dataset['publication_title'] = $publication->title->$locale;
+				
+				$publication = $submission->getCurrentPublication();
+				if ($publication) {
+					$locale = $this->locale;	
+					$title = $publication->getLocalizedData('title', $locale);
+					if (!$title) {
+						$title = $publication->getLocalizedTitle();
+					}	
+					$this->certificate_dataset['publication_title'] = $title;
 					// Usar la fecha de finalización de la revisión en lugar de lastModified
 					$dateToUse = $reviewCompletedDate ? $reviewCompletedDate : date('Y-m-d H:i:s');
 					$this->certificate_dataset['day_number'] = date('d', strtotime($dateToUse));
